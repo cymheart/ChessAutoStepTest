@@ -40,7 +40,7 @@ namespace ChessAutoStepTest
         int[] RandomPiecesCount()
         {
             Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
-            int[] piecesCount = { 0, 1, 1, 2, 2, 2, 8 };
+            int[] piecesCount = new int[(int)PieceType.Count];
             piecesCount[(int)PieceType.Queen] = ra.Next(0, 1);
             piecesCount[(int)PieceType.Knight] = ra.Next(0, 2);
             piecesCount[(int)PieceType.Rook] = ra.Next(0, 2);
@@ -55,8 +55,64 @@ namespace ChessAutoStepTest
         /// </summary>
         void CreateStandardPlayersBoardPieces()
         {
-
+            CreateStandardPlayerBoardPieces(players[0], BoardDirection.Forward);
+            CreateStandardPlayerBoardPieces(players[1], BoardDirection.Reverse);
         }
+
+        void CreateStandardPlayerBoardPieces(Player player, BoardDirection dir)
+        {
+            int pawnY = 1;
+            int kingY = 0;
+
+            if (dir == BoardDirection.Reverse)
+            {
+                kingY = 7;
+                pawnY = 6;
+            }
+
+            //pawn
+            for (int i = 0; i < 8; i++)
+            {
+                Pawn pawn = new Pawn();
+                chessBoard.AppendPiece(pawn, i, pawnY);
+                players[0].AddBoardPieceRef(i, pawnY);
+            }
+
+            //Rook
+            Piece piece = Utils.Instance.CreatePiece(PieceType.Rook);
+            chessBoard.AppendPiece(piece, 0, kingY);
+            players[0].AddBoardPieceRef(0, kingY);
+            piece = Utils.Instance.CreatePiece(PieceType.Rook);
+            chessBoard.AppendPiece(piece, 7, kingY);
+            players[0].AddBoardPieceRef(7, kingY);
+
+            //Knight
+            piece = Utils.Instance.CreatePiece(PieceType.Knight);
+            chessBoard.AppendPiece(piece, 1, kingY);
+            players[0].AddBoardPieceRef(1, kingY);
+            piece = Utils.Instance.CreatePiece(PieceType.Knight);
+            chessBoard.AppendPiece(piece, 6, kingY);
+            players[0].AddBoardPieceRef(6, kingY);
+
+            //Bishop
+            piece = Utils.Instance.CreatePiece(PieceType.Bishop);
+            chessBoard.AppendPiece(piece, 2, kingY);
+            players[0].AddBoardPieceRef(2, kingY);
+            piece = Utils.Instance.CreatePiece(PieceType.Bishop);
+            chessBoard.AppendPiece(piece, 5, kingY);
+            players[0].AddBoardPieceRef(5, kingY);
+
+            //King
+            piece = Utils.Instance.CreatePiece(PieceType.King);
+            chessBoard.AppendPiece(piece, 3, kingY);
+            players[0].AddBoardPieceRef(3, kingY);
+
+            //Queen
+            piece = Utils.Instance.CreatePiece(PieceType.Queen);
+            chessBoard.AppendPiece(piece, 4, kingY);
+            players[0].AddBoardPieceRef(4, kingY);
+        }
+
 
 
         /// <summary>
@@ -180,10 +236,6 @@ namespace ChessAutoStepTest
                 }
             }
         }
-
-
-
-        
 
     }
 }
