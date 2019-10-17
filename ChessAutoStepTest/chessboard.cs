@@ -56,5 +56,6 @@ namespace ChessAutoStepTest
             return false;
         }
 
+
     }
 }

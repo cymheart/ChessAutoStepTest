@@ -50,6 +50,11 @@ namespace ChessAutoStepTest
         Count 
     }
 
+    public enum BoardCellColor:int
+    {
+        White,
+        Black  
+    }
 
     /// <summary>
     /// 棋盘标号
