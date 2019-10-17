@@ -10,7 +10,7 @@ namespace ChessAutoStepTest
     /// <summary>
     /// 棋子类型
     /// </summary>
-    public enum PieceType
+    public enum PieceType : int
     {
         /// <summary>
         /// 未知
@@ -46,8 +46,8 @@ namespace ChessAutoStepTest
         /// 兵
         /// </summary>
         Pawn,
-       
-      
+
+        Count 
     }
 
 

@@ -32,6 +32,15 @@ namespace ChessAutoStepTest
             LastActionPieceAtPrevBoardIdx = new BoardIdx() { x = -1, y = -1 };
         }
 
+        public void AppendPiece(Piece piece, int x, int y)
+        {
+            if (x < 0 || x >= XCount || y < 0 || y >= YCount)
+                return;
+
+            boardPieces[x, y] = piece;
+        }
+
+
         public Piece GetLastActionPiece()
         {
             if (LastActionPieceAtBoardIdx.x == -1 || LastActionPieceAtBoardIdx.y == -1)
