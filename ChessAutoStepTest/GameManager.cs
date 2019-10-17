@@ -66,26 +66,44 @@ namespace ChessAutoStepTest
 
             //两个象不能在同一种色块格中
             List<int> pieceIdxList = new List<int>(pieceAtboardIdxs);
-            if(piecesCount0[(int)PieceType.Bishop] >= 2)
-            {
-                Bishop bishop = new Bishop();
-                chessBoard.AppendPiece(bishop, pieceIdxList[0], pieceIdxList[1]);
-                BoardCellColor color = chessBoard.GetCellColor(pieceIdxList[0], pieceIdxList[1]);
-                pieceIdxList.RemoveAt(0);
-                pieceIdxList.RemoveAt(1);
+            if(piecesCount0[(int)PieceType.Bishop] == 2)
+                CreateTowBishop(pieceIdxList, players[0]);
 
-                for(int i=0; i< pieceIdxList.Count; i++)
-                {
-
-                }
-
-            }
+            if (piecesCount1[(int)PieceType.Bishop] == 2)
+                CreateTowBishop(pieceIdxList, players[1]);
 
 
-
+            //
             for (PieceType i = PieceType.King; i < PieceType.Count; i++)
             {
                
+            }
+        }
+
+
+        //两个象不能在同一种色块格中
+        void CreateTowBishop(List<int> pieceIdxList, Player player)
+        {
+            Bishop bishop = new Bishop();
+            chessBoard.AppendPiece(bishop, pieceIdxList[0], pieceIdxList[1]);
+            player.AddBoardPieceRef(pieceIdxList[0], pieceIdxList[1]);
+            BoardCellColor color1 = chessBoard.GetCellColor(pieceIdxList[0], pieceIdxList[1]);
+            pieceIdxList.RemoveAt(0);
+            pieceIdxList.RemoveAt(1);
+
+            BoardCellColor color2;
+            for (int i = 0; i < pieceIdxList.Count; i += 2)
+            {
+                color2 = chessBoard.GetCellColor(pieceIdxList[i], pieceIdxList[i + 1]);
+                if (color2 != color1)
+                {
+                    bishop = new Bishop();
+                    chessBoard.AppendPiece(bishop, pieceIdxList[i], pieceIdxList[i + 1]);
+                    player.AddBoardPieceRef(pieceIdxList[i], pieceIdxList[i+1]);
+                    pieceIdxList.RemoveAt(i);
+                    pieceIdxList.RemoveAt(i + 1);
+                    break;
+                }
             }
         }
 
