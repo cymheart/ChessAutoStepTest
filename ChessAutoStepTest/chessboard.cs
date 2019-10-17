@@ -13,6 +13,9 @@ namespace ChessAutoStepTest
 
         Piece[,] boardPieces;
 
+        public BoardIdx lastActionPieceAtBoardIdx;
+        public BoardIdx lastActionPieceAtPrevBoardIdx;
+
         public Chessboard()
         {
 

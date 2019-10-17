@@ -17,4 +17,10 @@ namespace ChessAutoStepTest
         Line,
         Point
     }
+
+    public enum BoardDirection
+    {
+        Forward,
+        Reverse
+    }
 }

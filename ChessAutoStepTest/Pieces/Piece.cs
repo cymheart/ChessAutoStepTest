@@ -11,6 +11,7 @@ namespace ChessAutoStepTest
         protected int[] moveOffset;
         protected int[] eatOffset;
         protected PieceMoveType moveType = PieceMoveType.Point;
+        protected int moveLimitCount = -1;
 
         public virtual BoardIdx[] ComputeMovePos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
         {
@@ -66,23 +67,32 @@ namespace ChessAutoStepTest
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
+            int count = 0;
             int row;
             int col;
             BoardIdx boardIdx = new BoardIdx();
 
             for (int i = 0; i < moveOffset.Length; i += 2)
             {
+                count = 0;
                 row = curtRowIdx;
                 col = curtColIdx;
 
                 while (true)
                 {
+                    count++;
                     row += moveOffset[i];
                     col += moveOffset[i + 1];
 
-                    if (row < 0 || col < 0 ||
-                    row >= chessBoard.RowCount ||
-                    col >= chessBoard.ColCount)
+                    if(moveLimitCount != -1 && 
+                        count > moveLimitCount)
+                    {
+                        break;
+                    }
+
+                    if (row < 0 || col < 0 ||              
+                        row >= chessBoard.RowCount ||             
+                        col >= chessBoard.ColCount)
                         break;
 
                     if (chessBoard.IsHavPiece(row, col))
@@ -91,6 +101,7 @@ namespace ChessAutoStepTest
                     boardIdx.row = row;
                     boardIdx.col = col;
                     boardIdxList.Add(boardIdx);
+                   
                 }
             }
 
@@ -123,19 +134,28 @@ namespace ChessAutoStepTest
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
+            int count = 0;
             int row;
             int col;
             BoardIdx boardIdx = new BoardIdx();
 
             for (int i = 0; i < eatOffset.Length; i += 2)
             {
+                count = 0;
                 row = curtRowIdx;
                 col = curtColIdx;
 
                 while (true)
                 {
+                    count++;
                     row += eatOffset[i];
                     col += eatOffset[i + 1];
+
+                    if (moveLimitCount != -1 &&
+                      count > moveLimitCount)
+                    {
+                        break;
+                    }
 
                     if (row < 0 || col < 0 ||
                     row >= chessBoard.RowCount ||
