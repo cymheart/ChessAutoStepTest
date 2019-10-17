@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
-    public class PlayManager
+    public class GameManager
     {
         Player[] players;
         Chessboard chessBoard;
@@ -14,7 +14,7 @@ namespace ChessAutoStepTest
         int chessBoardRowCount;
         int chessBoardColCount;
 
-        public PlayManager()
+        public GameManager()
         {
             players = new Player[2]
             {

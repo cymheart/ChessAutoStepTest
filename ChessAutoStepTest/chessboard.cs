@@ -23,5 +23,13 @@ namespace ChessAutoStepTest
             boardPieces = new Piece[RowCount, ColCount];
         }
 
+
+        public bool IsHavPiece(int rowIdx, int colIdx)
+        {
+            if (boardPieces[rowIdx,colIdx] != null)
+                return true;
+            return false;
+        }
+
     }
 }
