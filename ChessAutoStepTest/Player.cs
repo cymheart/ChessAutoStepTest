@@ -11,29 +11,29 @@ namespace ChessAutoStepTest
         public LinkedList<int> chessBoardPiecePos = new LinkedList<int>();
 
 
-        void DelBoardPieceRef(int boardRowIdx, int boardColIdx)
+        void DelBoardPieceRef(int boardX, int boardY)
         {
-            int key = GetPieceKeyForBoardIdx(boardRowIdx, boardColIdx);
+            int key = GetPieceKeyForBoardIdx(boardX, boardY);
             chessBoardPiecePos.Remove(key);
         }
 
-        void AddBoardPieceRef(int boardRowIdx, int boardColIdx)
+        void AddBoardPieceRef(int boardX, int boardY)
         {
-            int key = GetPieceKeyForBoardIdx(boardRowIdx, boardColIdx);
+            int key = GetPieceKeyForBoardIdx(boardX, boardY);
             chessBoardPiecePos.AddLast(key);
         }
 
 
-        int GetPieceKeyForBoardIdx(int boardRowIdx, int boardColIdx)
+        int GetPieceKeyForBoardIdx(int boardX, int boardY)
         {
-            return (boardRowIdx << 12) | boardColIdx;
+            return (boardX << 12) | boardY;
         }
 
         public BoardIdx GetPieceKeyBoardIdx(int pieceKey)
         {
             BoardIdx boardIdx = new BoardIdx();
-            boardIdx.row = pieceKey >> 12;
-            boardIdx.col = pieceKey & 0xfff;
+            boardIdx.x = pieceKey >> 12;
+            boardIdx.y = pieceKey & 0xfff;
             return boardIdx;
         }
     }

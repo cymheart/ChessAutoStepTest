@@ -6,10 +6,54 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
+
+    /// <summary>
+    /// 棋子类型
+    /// </summary>
+    public enum PieceType
+    {
+        /// <summary>
+        /// 未知
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// 王
+        /// </summary>
+        King,
+
+        /// <summary>
+        /// 后
+        /// </summary>
+        Queen,
+
+        /// <summary>
+        /// 马
+        /// </summary>
+        Knight,
+
+        /// <summary>
+        /// 车
+        /// </summary>
+        Rook,
+
+        /// <summary>
+        /// 象
+        /// </summary>
+        Bishop,
+
+        /// <summary>
+        /// 兵
+        /// </summary>
+        Pawn,
+       
+      
+    }
+
     public struct BoardIdx
     {
-        public int row;
-        public int col;
+        public int x;
+        public int y;
     }
 
     public enum PieceMoveType

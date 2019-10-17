@@ -13,48 +13,56 @@ namespace ChessAutoStepTest
         protected PieceMoveType moveType = PieceMoveType.Point;
         protected int moveLimitCount = -1;
 
-        public virtual BoardIdx[] ComputeMovePos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        public virtual PieceType Type
+        {
+            get
+            {
+                return PieceType.None;
+            }
+        }
+
+        public virtual BoardIdx[] ComputeMovePos(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             switch (moveType)
             {
                 case PieceMoveType.Point:
-                    return ComputeMovePosForPointType(curtRowIdx, curtColIdx, chessBoard);
+                    return ComputeMovePosForPointType(curtBoardX, curtBoardY, chessBoard);
                 case PieceMoveType.Line:
-                    return ComputeMovePosForLineType(curtRowIdx, curtColIdx, chessBoard);
+                    return ComputeMovePosForLineType(curtBoardX, curtBoardY, chessBoard);
             }
 
             return null;
         }
-        public virtual BoardIdx[] ComputeEatPos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        public virtual BoardIdx[] ComputeEatPos(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             switch (moveType)
             {
                 case PieceMoveType.Point:
-                    return ComputeEatPosForPointType(curtRowIdx, curtColIdx, chessBoard);
+                    return ComputeEatPosForPointType(curtBoardX, curtBoardY, chessBoard);
                 case PieceMoveType.Line:
-                    return ComputeEatPosForLineType(curtRowIdx, curtColIdx, chessBoard);
+                    return ComputeEatPosForLineType(curtBoardX, curtBoardY, chessBoard);
             }
 
             return null;
         }
 
 
-        BoardIdx[] ComputeMovePosForPointType(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        BoardIdx[] ComputeMovePosForPointType(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
             BoardIdx boardIdx = new BoardIdx();
             for (int i = 0; i < moveOffset.Length; i += 2)
             {
-                boardIdx.row = curtRowIdx + moveOffset[i];
-                boardIdx.col = curtColIdx + moveOffset[i + 1];
+                boardIdx.x = curtBoardX + moveOffset[i];
+                boardIdx.y = curtBoardY + moveOffset[i + 1];
 
-                if (boardIdx.row < 0 || boardIdx.col < 0 ||
-                   boardIdx.row >= chessBoard.RowCount ||
-                   boardIdx.col >= chessBoard.ColCount)
+                if (boardIdx.x < 0 || boardIdx.y < 0 ||
+                   boardIdx.x >= chessBoard.RowCount ||
+                   boardIdx.y >= chessBoard.ColCount)
                     continue;
 
-                if (chessBoard.IsHavPiece(boardIdx.row, boardIdx.col))
+                if (chessBoard.IsHavPiece(boardIdx.x, boardIdx.y))
                     continue;
 
                 boardIdxList.Add(boardIdx);
@@ -63,26 +71,26 @@ namespace ChessAutoStepTest
             return boardIdxList.ToArray();
         }
 
-        BoardIdx[] ComputeMovePosForLineType(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        BoardIdx[] ComputeMovePosForLineType(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
             int count = 0;
-            int row;
-            int col;
+            int x;
+            int y;
             BoardIdx boardIdx = new BoardIdx();
 
             for (int i = 0; i < moveOffset.Length; i += 2)
             {
                 count = 0;
-                row = curtRowIdx;
-                col = curtColIdx;
+                x = curtBoardX;
+                y = curtBoardY;
 
                 while (true)
                 {
                     count++;
-                    row += moveOffset[i];
-                    col += moveOffset[i + 1];
+                    x += moveOffset[i];
+                    y += moveOffset[i + 1];
 
                     if(moveLimitCount != -1 && 
                         count > moveLimitCount)
@@ -90,16 +98,16 @@ namespace ChessAutoStepTest
                         break;
                     }
 
-                    if (row < 0 || col < 0 ||              
-                        row >= chessBoard.RowCount ||             
-                        col >= chessBoard.ColCount)
+                    if (x < 0 || y < 0 ||              
+                        x >= chessBoard.RowCount ||             
+                        y >= chessBoard.ColCount)
                         break;
 
-                    if (chessBoard.IsHavPiece(row, col))
+                    if (chessBoard.IsHavPiece(x, y))
                         break;
 
-                    boardIdx.row = row;
-                    boardIdx.col = col;
+                    boardIdx.x = x;
+                    boardIdx.y = y;
                     boardIdxList.Add(boardIdx);
                    
                 }
@@ -108,48 +116,48 @@ namespace ChessAutoStepTest
             return boardIdxList.ToArray();
         }
 
-        BoardIdx[] ComputeEatPosForPointType(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        BoardIdx[] ComputeEatPosForPointType(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
             BoardIdx boardIdx = new BoardIdx();
             for (int i = 0; i < eatOffset.Length; i += 2)
             {
-                boardIdx.row = curtRowIdx + eatOffset[i];
-                boardIdx.col = curtColIdx + eatOffset[i + 1];
+                boardIdx.x = curtBoardX + eatOffset[i];
+                boardIdx.y = curtBoardY + eatOffset[i + 1];
 
-                if (boardIdx.row < 0 || boardIdx.col < 0 ||
-                   boardIdx.row >= chessBoard.RowCount ||
-                   boardIdx.col >= chessBoard.ColCount)
+                if (boardIdx.x < 0 || boardIdx.y < 0 ||
+                   boardIdx.x >= chessBoard.RowCount ||
+                   boardIdx.y >= chessBoard.ColCount)
                     continue;
 
-                if (chessBoard.IsHavPiece(boardIdx.row, boardIdx.col))
+                if (chessBoard.IsHavPiece(boardIdx.x, boardIdx.y))
                     boardIdxList.Add(boardIdx);
             }
 
             return boardIdxList.ToArray();
         }
 
-        BoardIdx[] ComputeEatPosForLineType(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        BoardIdx[] ComputeEatPosForLineType(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
             int count = 0;
-            int row;
-            int col;
+            int x;
+            int y;
             BoardIdx boardIdx = new BoardIdx();
 
             for (int i = 0; i < eatOffset.Length; i += 2)
             {
                 count = 0;
-                row = curtRowIdx;
-                col = curtColIdx;
+                x = curtBoardX;
+                y = curtBoardY;
 
                 while (true)
                 {
                     count++;
-                    row += eatOffset[i];
-                    col += eatOffset[i + 1];
+                    x += eatOffset[i];
+                    y += eatOffset[i + 1];
 
                     if (moveLimitCount != -1 &&
                       count > moveLimitCount)
@@ -157,15 +165,15 @@ namespace ChessAutoStepTest
                         break;
                     }
 
-                    if (row < 0 || col < 0 ||
-                    row >= chessBoard.RowCount ||
-                    col >= chessBoard.ColCount)
+                    if (x < 0 || y < 0 ||
+                    x >= chessBoard.RowCount ||
+                    y >= chessBoard.ColCount)
                         break;
 
-                    if (chessBoard.IsHavPiece(row, col))
+                    if (chessBoard.IsHavPiece(x, y))
                     {
-                        boardIdx.row = row;
-                        boardIdx.col = col;
+                        boardIdx.x = x;
+                        boardIdx.y = y;
                         boardIdxList.Add(boardIdx);
                         break;
                     }

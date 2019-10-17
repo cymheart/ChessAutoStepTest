@@ -15,11 +15,21 @@ namespace ChessAutoStepTest
             -1,-1,0,-1,1,-1
         };
 
+        public override PieceType Type
+        {
+            get
+            {
+                return PieceType.King;
+            }
+        }
+
         public King()
         {
             moveType = PieceMoveType.Point;
             moveOffset = _offset;
             eatOffset = _offset;
         }
+
+
     }
 }

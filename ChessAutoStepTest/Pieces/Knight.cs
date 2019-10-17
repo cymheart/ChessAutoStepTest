@@ -16,6 +16,14 @@ namespace ChessAutoStepTest
             -2,-1, -2,1
       };
 
+        public override PieceType Type
+        {
+            get
+            {
+                return PieceType.Knight;
+            }
+        }
+
         public Knight()
         {
             moveType = PieceMoveType.Point;

@@ -8,13 +8,16 @@ namespace ChessAutoStepTest
 {
     public class Chessboard
     {
-        public int RowCount;
-        public int ColCount;
+        public int XCount;
+        public int YCount;
 
         Piece[,] boardPieces;
 
-        public BoardIdx lastActionPieceAtBoardIdx;
-        public BoardIdx lastActionPieceAtPrevBoardIdx;
+        public BoardIdx LastActionPieceAtBoardIdx;
+        public BoardIdx LastActionPieceAtPrevBoardIdx;
+
+        
+
 
         public Chessboard()
         {
@@ -23,9 +26,19 @@ namespace ChessAutoStepTest
 
         public void Create()
         {
-            boardPieces = new Piece[RowCount, ColCount];
+            boardPieces = new Piece[XCount, YCount];
+
+            LastActionPieceAtBoardIdx = new BoardIdx() { x = -1, y = -1 };
+            LastActionPieceAtPrevBoardIdx = new BoardIdx() { x = -1, y = -1 };
         }
 
+        public Piece GetLastActionPiece()
+        {
+            if (LastActionPieceAtBoardIdx.x == -1 || LastActionPieceAtBoardIdx.y == -1)
+                return null;
+
+            return boardPieces[LastActionPieceAtBoardIdx.x, LastActionPieceAtBoardIdx.y];
+        }
 
         public bool IsHavPiece(int rowIdx, int colIdx)
         {

@@ -15,6 +15,14 @@ namespace ChessAutoStepTest
             -1,-1,0,-1,1,-1
       };
 
+        public override PieceType Type
+        {
+            get
+            {
+                return PieceType.Queen;
+            }
+        }
+
         public Queen()
         {
             moveType = PieceMoveType.Line;
