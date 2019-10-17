@@ -7,3 +7,13 @@ D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepT
 D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csproj.CoreCompileInputs.cache
 D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.exe
 D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.pdb
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\bin\Debug\ChessAutoStepTest.exe.config
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\bin\Debug\ChessAutoStepTest.exe
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\bin\Debug\ChessAutoStepTest.pdb
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csprojAssemblyReference.cache
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.Chess.resources
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.Properties.Resources.resources
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csproj.GenerateResource.cache
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csproj.CoreCompileInputs.cache
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.exe
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.pdb

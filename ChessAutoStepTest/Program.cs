@@ -16,6 +16,12 @@ namespace ChessAutoStepTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            GameManager gameManager = new GameManager();
+            gameManager.CreateGame();
+            gameManager.Play();
+
+
             Application.Run(new Chess());
         }
     }

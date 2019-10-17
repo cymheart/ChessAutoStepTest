@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
+    [Serializable]
     public class Queen : Piece
     {
        static int[] _offset = new int[]

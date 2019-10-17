@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
+    [Serializable]
     public class Chessboard
     {
         public int XCount;
@@ -15,9 +16,6 @@ namespace ChessAutoStepTest
 
         public BoardIdx LastActionPieceAtBoardIdx;
         public BoardIdx LastActionPieceAtPrevBoardIdx;
-
-        
-
 
         public Chessboard()
         {
@@ -38,6 +36,16 @@ namespace ChessAutoStepTest
                 return;
 
             boardPieces[x, y] = piece;
+            LastActionPieceAtBoardIdx.x = x;
+            LastActionPieceAtBoardIdx.y = y;
+        }
+
+        public void RemovePiece(int x, int y)
+        {
+            if (x < 0 || x >= XCount || y < 0 || y >= YCount)
+                return;
+
+            boardPieces[x, y] = null;
         }
 
         public Piece GetPiece(BoardIdx boardIdx)

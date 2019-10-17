@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
+    [Serializable]
     public class Pawn : Piece
     {
         static int[] _moveOffsetForward = new int[]
@@ -59,12 +60,7 @@ namespace ChessAutoStepTest
                 }
             }
         }
-
-        /// <summary>
-        /// 是否首次移动
-        /// </summary>
-        public bool IsFirstMove = true;
-
+       
         /// <summary>
         /// 是否可以吃过路兵
         /// </summary>
@@ -74,6 +70,7 @@ namespace ChessAutoStepTest
         public Pawn()
         {
             moveType = PieceMoveType.Point;
+            PieceAtBoardDir = BoardDirection.Forward;
         }
 
         public override BoardIdx[] ComputeMovePos(int curtBoardX, int curtBoardY, Chessboard chessBoard)

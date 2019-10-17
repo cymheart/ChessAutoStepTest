@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +28,20 @@ namespace ChessAutoStepTest
             return obj;
         }
 
+        public T DeepCopyByBinary<T>(T obj)
+        {
+            object retval;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(ms, obj);
+                ms.Seek(0, SeekOrigin.Begin);
+                retval = bf.Deserialize(ms);
+                ms.Close();
+            }
+            return (T)retval;
+        }
+
         public Piece CreatePiece(PieceType type)
         {
             switch(type)
@@ -46,6 +62,10 @@ namespace ChessAutoStepTest
             Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
             return ra;
         }
+
+
+      
+
 
         public int[] GetRandomNum(int[] existArrNum, int num, int minValue, int maxValue)
         {

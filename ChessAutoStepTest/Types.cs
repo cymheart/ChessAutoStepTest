@@ -58,7 +58,7 @@ namespace ChessAutoStepTest
     }
 
 
-
+    [Serializable]
     /// <summary>
     /// 棋盘标号
     /// </summary>

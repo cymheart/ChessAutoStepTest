@@ -11,9 +11,9 @@ namespace ChessAutoStepTest
         Player[] players;
         Chessboard chessBoard;
 
-        int chessBoardRowCount;
-        int chessBoardColCount;
-        bool IsRandomPiecesPos = true;
+        public int ChessBoardXCount = 8;
+        public int ChessBoardYCount = 8;
+        bool IsRandomPiecesPos = false;
         bool IsRandomPiecesCount = false;
 
         int firstPlayPlayerIdx = 0;
@@ -21,83 +21,206 @@ namespace ChessAutoStepTest
         int playerCount = 2;
         int curtPlayPlayerIdx;
 
+        int turnCount = 100;
+
+        Player[] _cachePlayers;
+        Chessboard _cacheChessBoard;
+
+        List<int> allPiecesIdx = new List<int>();
+        List<int> pawn0Idx = new List<int>();
+        List<int> pawn1Idx = new List<int>();
+
+
         public GameManager()
         {
-            players = new Player[2]
-            {
-                new Player(),
-                new Player()
-            };
+
         }
 
-        public void Create()
+        public void CreateGame()
         {
-            chessBoard.XCount = chessBoardRowCount;
-            chessBoard.YCount = chessBoardColCount;
+            chessBoard = new Chessboard();
+            chessBoard.XCount = ChessBoardXCount;
+            chessBoard.YCount = ChessBoardYCount;
             chessBoard.Create();
 
             players = new Player[2]
            {
-                new Player(),
-                new Player()
+                new Player(chessBoard),
+                new Player(chessBoard)
            };
 
+            _cachePlayers = new Player[2] { null, null };
+
             curtPlayPlayerIdx = -1;
+            CreateRandomIdxTable();
 
             CreatePlayersBoardPieces();
+        }
+
+        /// <summary>
+        /// 缓存当前游戏数据
+        /// </summary>
+        void CacheGameData()
+        {
+            _cacheChessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(chessBoard);
+            _cachePlayers[0] = Tools.Instance.DeepCopyByBinary<Player>(players[0]);
+            _cachePlayers[1] = Tools.Instance.DeepCopyByBinary<Player>(players[1]);
+        }
+
+
+        /// <summary>
+        /// 恢复先前缓存的游戏数据
+        /// </summary>
+        void RecoverGameData()
+        {
+            chessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(_cacheChessBoard);
+            players[0] = Tools.Instance.DeepCopyByBinary<Player>(_cachePlayers[0]);
+            players[1] = Tools.Instance.DeepCopyByBinary<Player>(_cachePlayers[1]);
         }
 
 
         /// <summary>
         /// 
         /// </summary>
-        public void CompputeGameResult()
+        public int Play()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < turnCount; i++)
             {
                 TurnToNextPlayer();
+                AIPlay(players[curtPlayPlayerIdx]);
 
+                int nextPlayerIdx = GetNextPlayerIdx();
+                BoardIdx[] kingBoardIdx = players[nextPlayerIdx].GetPieceBoardIdxsByType(PieceType.King);
+                if (kingBoardIdx == null)
+                    return 1;
 
-
+                TurnToNextPlayer();
+                AIPlay(players[curtPlayPlayerIdx]);
+                nextPlayerIdx = GetNextPlayerIdx();
+                kingBoardIdx = players[nextPlayerIdx].GetPieceBoardIdxsByType(PieceType.King);
+                if (kingBoardIdx == null)
+                    return 1;
 
             }
 
+            return 0;
         }
 
 
+
+        /// <summary>
+        /// 轮转玩家
+        /// </summary>
         void TurnToNextPlayer()
         {
+            curtPlayPlayerIdx = GetNextPlayerIdx();
+        }
+
+        /// <summary>
+        /// 获取下一个玩家
+        /// </summary>
+        int GetNextPlayerIdx()
+        {
             if (curtPlayPlayerIdx == -1)
-                curtPlayPlayerIdx = firstPlayPlayerIdx;
+                return firstPlayPlayerIdx;
             else
-                curtPlayPlayerIdx = (firstPlayPlayerIdx + 1) % playerCount;
+                return (curtPlayPlayerIdx + 1) % playerCount;
         }
 
 
-        void dd(Player player)
+        /// <summary>
+        /// 玩家策略走棋
+        /// </summary>
+        /// <param name="player"></param>
+        void AIPlay(Player player)
         {
-            BoardIdx boardIdx = player.GetRandomPieceBoardIdx();
-            Piece piece = chessBoard.GetPiece(boardIdx);
+            int nextPlayerIdx = GetNextPlayerIdx();
 
-            //优先吃棋子
-            BoardIdx[] canEatBoardIdxs = piece.ComputeEatPos(boardIdx.x, boardIdx.y, chessBoard);
-            if(canEatBoardIdxs.Length != 0)
+            //1.优先吃对方的王
+            BoardIdx[] kingBoardIdx = players[nextPlayerIdx].GetPieceBoardIdxsByType(PieceType.King);
+            BoardIdx? canEatKingBoardIdx = player.GetCanEatBoardIdx(kingBoardIdx[0]);
+            if(canEatKingBoardIdx != null)
             {
+                player.EatOrMoveBoardPiece(canEatKingBoardIdx.Value, kingBoardIdx[0]);
+                players[nextPlayerIdx].DelBoardPieceRef(kingBoardIdx[0].x, kingBoardIdx[0].y);
+                return;
+            }
+
+            //2.王下回合被吃的情况下，优先移动王
+            kingBoardIdx = player.GetPieceBoardIdxsByType(PieceType.King);
+            canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(kingBoardIdx[0]);
+            if (canEatKingBoardIdx != null)
+            {
+                Piece piece = chessBoard.GetPiece(kingBoardIdx[0]);
+                BoardIdx[] eatPos = piece.ComputeEatPos(kingBoardIdx[0].x, kingBoardIdx[0].y, chessBoard);
+                BoardIdx[] movePos = piece.ComputeMovePos(kingBoardIdx[0].x, kingBoardIdx[0].y, chessBoard);
+
+                if (eatPos.Length != 0 || movePos.Length != 0)
+                {
+                    CacheGameData();
+
+                    for (int i = 0; i < eatPos.Length; i++)
+                    {
+                        player.EatOrMoveBoardPiece(kingBoardIdx[0], eatPos[i]);
+                        players[nextPlayerIdx].DelBoardPieceRef(eatPos[i].x, eatPos[i].y);
+
+                        kingBoardIdx[0] = eatPos[i];
+                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(kingBoardIdx[0]);
+                        if (canEatKingBoardIdx == null)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            RecoverGameData();
+                        }
+                    }
+
+                    for (int i = 0; i < movePos.Length; i++)
+                    {
+                        player.EatOrMoveBoardPiece(kingBoardIdx[0], movePos[i]);
+
+                        kingBoardIdx[0] = movePos[i];
+                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(kingBoardIdx[0]);
+                        if (canEatKingBoardIdx == null)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            RecoverGameData();
+                        }
+                    }
+                }
+            }
+
+
+            //3.吃棋子
+            BoardIdx? boardIdx = player.GetRandomCanEatBoardIdx();
+            if (boardIdx != null)
+            {
+                Piece piece = chessBoard.GetPiece(boardIdx.Value);
+                BoardIdx[] canEatBoardIdxs = piece.ComputeEatPos(boardIdx.Value.x, boardIdx.Value.y, chessBoard);
                 Random ra = Tools.Instance.Rand();
                 int eatIdx = ra.Next(0, canEatBoardIdxs.Length - 1);
                 BoardIdx eatBoardIdx = canEatBoardIdxs[eatIdx];
-
-
-
-
+                player.EatOrMoveBoardPiece(boardIdx.Value, eatBoardIdx);
+                players[nextPlayerIdx].DelBoardPieceRef(eatBoardIdx.x, eatBoardIdx.y);
             }
-
-
-            //没有吃的情况下，随机移动棋子
-            BoardIdx[] canMoveBoardIdxs = piece.ComputeMovePos(boardIdx.x, boardIdx.y, chessBoard);
+            else
+            { 
+                //4.没有吃的情况下，随机移动棋子
+                boardIdx = player.GetRandomCanMoveBoardIdx();
+                Piece piece = chessBoard.GetPiece(boardIdx.Value);
+                BoardIdx[] canMoveBoardIdxs = piece.ComputeMovePos(boardIdx.Value.x, boardIdx.Value.y, chessBoard);
+                Random ra = Tools.Instance.Rand();
+                int moveIdx = ra.Next(0, canMoveBoardIdxs.Length - 1);
+                BoardIdx moveBoardIdx = canMoveBoardIdxs[moveIdx];
+                player.EatOrMoveBoardPiece(boardIdx.Value, moveBoardIdx);
+            }
         }
 
-
+        
         /// <summary>
         /// 生成玩家棋盘棋子
         /// </summary>
@@ -133,11 +256,12 @@ namespace ChessAutoStepTest
             for (int i = 0; i < 8; i++)
             {
                 Pawn pawn = new Pawn();
+                pawn.Color = color;
                 pawn.PieceAtBoardDir = dir;
                 pawn.IsFirstMove = true;
                 chessBoard.AppendPiece(pawn, i, pawnY);
                 player.AddBoardPieceRef(i, pawnY);
-                pawn.Color = color;     
+                 
             }
 
             //Rook
@@ -186,6 +310,7 @@ namespace ChessAutoStepTest
             player.AddBoardPieceRef(4, kingY);
         }
 
+        
 
         /// <summary>
         /// 生成随机位置的玩家棋盘棋子
@@ -211,48 +336,52 @@ namespace ChessAutoStepTest
                     totalPiecesCount += piecesCount1[i];
             }
           
-            List<int> usedBoardIdxs = new List<int>();
-            int[] pawnAtboardXIdxs0 = Tools.Instance.GetRandomNum(null, pawnCount0, 0, 7);
-            usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pawnAtboardYIdxs0 = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount0, 1, 7);
-            usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pawnAtboardXIdxs1 = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 7);
-            usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pawnAtboardYIdxs1 = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 6);
-            usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pieceAtboardIdxs = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), totalPiecesCount * 2, 0, 7);
+            //
+           
 
             //兵不能在出现在第一行
+            Random ra = Tools.Instance.Rand();
+
             for (int i=0; i<pawnCount0; i++)
             {
                 Pawn pawn = new Pawn();
+                pawn.IsFirstMove = true;
                 pawn.Color = playerPieceColor[0];
-                chessBoard.AppendPiece(pawn, pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
-                players[0].AddBoardPieceRef(pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
+                pawn.PieceAtBoardDir = BoardDirection.Forward;
+                int n = ra.Next(0, pawn0Idx.Count);
+                int randIdx = pawn0Idx[n];
+                chessBoard.AppendPiece(pawn, randIdx >> 12, randIdx & 0xfff);
+                players[0].AddBoardPieceRef(randIdx >> 12, randIdx & 0xfff);
+
+                RemoveRandomIdxInTable(randIdx);
             }
 
             for (int i = 0; i < pawnCount1; i++)
             {
                 Pawn pawn = new Pawn();
+                pawn.IsFirstMove = true;
                 pawn.Color = playerPieceColor[1];
-                chessBoard.AppendPiece(pawn, pawnAtboardXIdxs1[0], pawnAtboardYIdxs1[1]);
-                players[1].AddBoardPieceRef(pawnAtboardXIdxs1[0], pawnAtboardYIdxs1[1]);
+                pawn.PieceAtBoardDir = BoardDirection.Reverse;
+                int n = ra.Next(0, pawn1Idx.Count);
+                int randIdx = pawn1Idx[n];
+                chessBoard.AppendPiece(pawn, randIdx >> 12, randIdx & 0xfff);
+                players[1].AddBoardPieceRef(randIdx >> 12, randIdx & 0xfff);
+
+                RemoveRandomIdxInTable(randIdx);
             }
 
 
             //两个象不能在同一种色块格中
-            List<int> pieceIdxList = new List<int>(pieceAtboardIdxs);
             if(piecesCount0[(int)PieceType.Bishop] == 2)
-                CreateTowBishop(pieceIdxList, players[0], playerPieceColor[0]);
+                CreateTowBishop(players[0], playerPieceColor[0]);
 
             if (piecesCount1[(int)PieceType.Bishop] == 2)
-                CreateTowBishop(pieceIdxList, players[1], playerPieceColor[1]);
+                CreateTowBishop(players[1], playerPieceColor[1]);
 
 
             //其它玩家的剩余棋子加入到棋盘
             int count;
-            int idx = 0;
-            for (PieceType i = PieceType.King; i < PieceType.Count; i++)
+            for (PieceType i = PieceType.King; i < PieceType.Pawn; i++)
             {
                 count = piecesCount0[(int)i];
                 if (count == 2 && i == PieceType.Bishop)
@@ -262,14 +391,16 @@ namespace ChessAutoStepTest
                 {
                     Piece piece = Tools.Instance.CreatePiece(i);
                     piece.Color = playerPieceColor[0];
-                    chessBoard.AppendPiece(piece, pieceIdxList[idx], pieceIdxList[idx + 1]);
-                    players[0].AddBoardPieceRef(pieceIdxList[idx], pieceIdxList[idx + 1]);
-                    idx += 2;
+                    int n = ra.Next(0, allPiecesIdx.Count);
+                    int randIdx = allPiecesIdx[n];
+                    RemoveRandomIdxInTable(randIdx);
+                    chessBoard.AppendPiece(piece, randIdx >> 12, randIdx & 0xfff);
+                    players[0].AddBoardPieceRef(randIdx >> 12, randIdx & 0xfff);
                 }
             }
 
 
-            for (PieceType i = PieceType.King; i < PieceType.Count; i++)
+            for (PieceType i = PieceType.King; i < PieceType.Pawn; i++)
             {
                 count = piecesCount1[(int)i];
                 if (count == 2 && i == PieceType.Bishop)
@@ -279,12 +410,51 @@ namespace ChessAutoStepTest
                 {
                     Piece piece = Tools.Instance.CreatePiece(i);
                     piece.Color = playerPieceColor[1];
-                    chessBoard.AppendPiece(piece, pieceIdxList[idx], pieceIdxList[idx + 1]);
-                    players[1].AddBoardPieceRef(pieceIdxList[idx], pieceIdxList[idx + 1]);
-                    idx += 2;
+                    int n = ra.Next(0, allPiecesIdx.Count);
+                    int randIdx = allPiecesIdx[n];
+                    RemoveRandomIdxInTable(randIdx);
+                    chessBoard.AppendPiece(piece, randIdx >> 12, randIdx & 0xfff);
+                    players[1].AddBoardPieceRef(randIdx >> 12, randIdx & 0xfff);
                 }
             }
         }
+
+        public void CreateRandomIdxTable()
+        {
+
+            for (int i = 0; i < ChessBoardXCount; i++)
+            {
+                for (int j = 0; j < ChessBoardXCount; j++)
+                {
+                    allPiecesIdx.Add(i << 12 | j);
+                }
+            }
+
+            for (int i = 0; i < ChessBoardXCount; i++)
+            {
+                for (int j = 1; j < ChessBoardXCount; j++)
+                {
+                    pawn0Idx.Add(i << 12 | j);
+                }
+            }
+
+            for (int i = 0; i < ChessBoardXCount; i++)
+            {
+                for (int j = 0; j < ChessBoardXCount - 1; j++)
+                {
+                    pawn1Idx.Add(i << 12 | j);
+                }
+            }
+        }
+
+        public void RemoveRandomIdxInTable(int randIdx)
+        {
+            pawn0Idx.Remove(randIdx);
+            allPiecesIdx.Remove(randIdx);
+            pawn1Idx.Remove(randIdx);
+        }
+
+
         int[] CreatePiecesCount()
         {    
             int[] piecesCount = {0, 1 ,1, 2, 2, 2, 8 };
@@ -303,28 +473,33 @@ namespace ChessAutoStepTest
         }
 
         //两个象不能在同一种色块格中
-        void CreateTowBishop(List<int> pieceIdxList, Player player, ChessColor chessColor)
+        void CreateTowBishop(Player player, ChessColor chessColor)
         {
+            Random ra = Tools.Instance.Rand();
+            int n = ra.Next(0, allPiecesIdx.Count);
+            int randIdx = allPiecesIdx[n];
+            RemoveRandomIdxInTable(randIdx);
+
             Bishop bishop = new Bishop();
             bishop.Color = chessColor;
-            chessBoard.AppendPiece(bishop, pieceIdxList[0], pieceIdxList[1]);
-            player.AddBoardPieceRef(pieceIdxList[0], pieceIdxList[1]);
-            ChessColor color1 = chessBoard.GetCellColor(pieceIdxList[0], pieceIdxList[1]);
-            pieceIdxList.RemoveAt(0);
-            pieceIdxList.RemoveAt(1);
+            chessBoard.AppendPiece(bishop, randIdx >> 12, randIdx & 0xfff);
+            player.AddBoardPieceRef(randIdx >> 12, randIdx & 0xfff);
+            ChessColor color1 = chessBoard.GetCellColor(randIdx >> 12, randIdx & 0xfff);
 
             ChessColor color2;
-            for (int i = 0; i < pieceIdxList.Count; i += 2)
+            while(true)
             {
-                color2 = chessBoard.GetCellColor(pieceIdxList[i], pieceIdxList[i + 1]);
+                n = ra.Next(0, allPiecesIdx.Count);
+                randIdx = allPiecesIdx[n];
+                color2 = chessBoard.GetCellColor(randIdx >> 12, randIdx & 0xfff);
                 if (color2 != color1)
                 {
                     bishop = new Bishop();
                     bishop.Color = chessColor;
-                    chessBoard.AppendPiece(bishop, pieceIdxList[i], pieceIdxList[i + 1]);
-                    player.AddBoardPieceRef(pieceIdxList[i], pieceIdxList[i+1]);
-                    pieceIdxList.RemoveAt(i);
-                    pieceIdxList.RemoveAt(i + 1);
+                    chessBoard.AppendPiece(bishop, randIdx >> 12, randIdx & 0xfff);
+                    player.AddBoardPieceRef(randIdx >> 12, randIdx & 0xfff);
+
+                    RemoveRandomIdxInTable(randIdx);
                     break;
                 }
             }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
+    [Serializable]
     public class Piece
     {
         /// <summary>
@@ -22,6 +23,11 @@ namespace ChessAutoStepTest
         protected int moveLimitCount = -1;
 
         public ChessColor Color = ChessColor.None;
+
+        /// <summary>
+        /// 是否首次移动
+        /// </summary>
+        public bool IsFirstMove = true;
 
         public virtual PieceType Type
         {
