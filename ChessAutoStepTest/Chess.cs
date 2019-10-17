@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace ChessAutoStepTest
 {
-    public partial class Form1 : Form
+    public partial class Chess : Form
     {
-        public Form1()
+        public Chess()
         {
             InitializeComponent();
         }

@@ -1,0 +1,9 @@
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\bin\Debug\ChessAutoStepTest.exe.config
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\bin\Debug\ChessAutoStepTest.exe
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\bin\Debug\ChessAutoStepTest.pdb
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csprojAssemblyReference.cache
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.Properties.Resources.resources
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csproj.GenerateResource.cache
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.csproj.CoreCompileInputs.cache
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.exe
+D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.pdb
