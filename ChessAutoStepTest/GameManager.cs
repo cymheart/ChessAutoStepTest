@@ -13,7 +13,8 @@ namespace ChessAutoStepTest
 
         int chessBoardRowCount;
         int chessBoardColCount;
-        bool IsPiecesRandomPos = true;
+        bool IsRandomPiecesPos = true;
+        bool IsRandomPiecesCount = false;
 
         public GameManager()
         {
@@ -35,20 +36,21 @@ namespace ChessAutoStepTest
                 new Player(),
                 new Player()
            };
+
+            CreatePlayersBoardPieces();
         }
 
-        int[] RandomPiecesCount()
+
+        /// <summary>
+        /// 生成玩家棋盘棋子
+        /// </summary>
+        void CreatePlayersBoardPieces()
         {
-            Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
-            int[] piecesCount = new int[(int)PieceType.Count];
-            piecesCount[(int)PieceType.Queen] = ra.Next(0, 1);
-            piecesCount[(int)PieceType.Knight] = ra.Next(0, 2);
-            piecesCount[(int)PieceType.Rook] = ra.Next(0, 2);
-            piecesCount[(int)PieceType.Bishop] = ra.Next(0, 2);
-            piecesCount[(int)PieceType.Pawn] = ra.Next(0, 8);
-            return piecesCount;
+            if(IsRandomPiecesPos)
+                CreateRandomPlayersBoardPieces();
+            else
+                CreateStandardPlayersBoardPieces();
         }
-
 
         /// <summary>
         /// 生成标准的玩家棋盘棋子
@@ -114,14 +116,13 @@ namespace ChessAutoStepTest
         }
 
 
-
         /// <summary>
         /// 生成随机位置的玩家棋盘棋子
         /// </summary>
         void CreateRandomPlayersBoardPieces()
         {
-            int[] piecesCount0 = RandomPiecesCount();
-            int[] piecesCount1 = RandomPiecesCount();
+            int[] piecesCount0 = CreatePiecesCount();
+            int[] piecesCount1 = CreatePiecesCount();
 
             int pawnCount0 = piecesCount0[(int)PieceType.Pawn];
             int pawnCount1 = piecesCount1[(int)PieceType.Pawn];
@@ -209,7 +210,22 @@ namespace ChessAutoStepTest
                 }
             }
         }
+        int[] CreatePiecesCount()
+        {    
+            int[] piecesCount = {0, 1 ,1, 2, 2, 2, 8 };
 
+            if (IsRandomPiecesCount)
+            {
+                Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
+                piecesCount[(int)PieceType.Queen] = ra.Next(0, 1);
+                piecesCount[(int)PieceType.Knight] = ra.Next(0, 2);
+                piecesCount[(int)PieceType.Rook] = ra.Next(0, 2);
+                piecesCount[(int)PieceType.Bishop] = ra.Next(0, 2);
+                piecesCount[(int)PieceType.Pawn] = ra.Next(0, 8);
+            }
+
+            return piecesCount;
+        }
 
         //两个象不能在同一种色块格中
         void CreateTowBishop(List<int> pieceIdxList, Player player)
