@@ -19,7 +19,29 @@ namespace ChessAutoStepTest
             }
         }
 
-        public int[] GetRandomNum(int[] existArrNum, int num, int minValue, int maxValue)
+        public T Create<T>()
+        {
+            Type type = typeof(T);
+            T obj = (T)Activator.CreateInstance(type);
+            return obj;
+        }
+
+        public Piece CreatePiece(PieceType type)
+        {
+            switch(type)
+            {
+                case PieceType.King: return new King();
+                case PieceType.Queen: return new Queen();
+                case PieceType.Knight: return new Knight();
+                case PieceType.Rook: return new Rook();
+                case PieceType.Bishop: return new Bishop();
+                case PieceType.Pawn: return new Pawn();
+            }
+
+            return null;
+        }
+
+            public int[] GetRandomNum(int[] existArrNum, int num, int minValue, int maxValue)
         {
 
             Random ra = new Random(unchecked((int)DateTime.Now.Ticks));

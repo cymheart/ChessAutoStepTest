@@ -94,7 +94,7 @@ namespace ChessAutoStepTest
             usedBoardIdxs.AddRange(usedBoardIdxs);
             int[] pieceAtboardIdxs = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), totalPiecesCount * 2, 0, 7);
 
-            //兵不能在出现在最后一行
+            //兵不能在出现在第一行
             for (int i=0; i<pawnCount0; i++)
             {
                 Pawn pawn = new Pawn();
@@ -119,19 +119,37 @@ namespace ChessAutoStepTest
                 CreateTowBishop(pieceIdxList, players[1]);
 
 
-            //其它棋子加入到棋盘
+            //其它玩家的剩余棋子加入到棋盘
             int count;
+            int idx = 0;
             for (PieceType i = PieceType.King; i < PieceType.Count; i++)
             {
                 count = piecesCount0[(int)i];
                 if (count == 2 && i == PieceType.Bishop)
                     continue;
 
-                for(int j=0; j<count; j++)
+                for(int j = 0; j < count; j++)
                 {
-                    Pawn pawn = new Pawn();
-                    chessBoard.AppendPiece(pawn, pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
-                    players[0].AddBoardPieceRef(pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
+                    Piece piece = Utils.Instance.CreatePiece(i);
+                    chessBoard.AppendPiece(piece, pieceIdxList[idx], pieceIdxList[idx + 1]);
+                    players[0].AddBoardPieceRef(pieceIdxList[idx], pieceIdxList[idx + 1]);
+                    idx += 2;
+                }
+            }
+
+
+            for (PieceType i = PieceType.King; i < PieceType.Count; i++)
+            {
+                count = piecesCount1[(int)i];
+                if (count == 2 && i == PieceType.Bishop)
+                    continue;
+
+                for (int j = 0; j < count; j++)
+                {
+                    Piece piece = Utils.Instance.CreatePiece(i);
+                    chessBoard.AppendPiece(piece, pieceIdxList[idx], pieceIdxList[idx + 1]);
+                    players[1].AddBoardPieceRef(pieceIdxList[idx], pieceIdxList[idx + 1]);
+                    idx += 2;
                 }
             }
         }
