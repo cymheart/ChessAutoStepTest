@@ -25,8 +25,8 @@ namespace ChessAutoStepTest
 
         public void Create()
         {
-            chessBoard.RowCount = chessBoardRowCount;
-            chessBoard.ColCount = chessBoardColCount;
+            chessBoard.XCount = chessBoardRowCount;
+            chessBoard.YCount = chessBoardColCount;
             chessBoard.Create();
         }
 

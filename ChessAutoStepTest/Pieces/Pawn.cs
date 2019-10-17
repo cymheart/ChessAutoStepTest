@@ -65,6 +65,11 @@ namespace ChessAutoStepTest
         /// </summary>
         public bool IsFirstMove = true;
 
+        /// <summary>
+        /// 是否可以吃过路兵
+        /// </summary>
+        public bool EatGuoLuPawn = true;
+
 
         public Pawn()
         {
@@ -92,14 +97,17 @@ namespace ChessAutoStepTest
             BoardIdx[] eatBoardIdx = base.ComputeEatPos(curtBoardX, curtBoardY, chessBoard);
 
             //判断是否可以吃过路兵
-            bool canEatPawn = CanEatGuoLuPawn(curtBoardX, curtBoardY, chessBoard);
-            if(canEatPawn)
+            if (EatGuoLuPawn)
             {
-                BoardIdx boardIdx = chessBoard.LastActionPieceAtBoardIdx;
-                List<BoardIdx> boardIdxList = new List<BoardIdx>();
-                boardIdxList.AddRange(eatBoardIdx);
-                boardIdxList.Add(boardIdx);
-                eatBoardIdx = boardIdxList.ToArray();
+                bool canEatPawn = CanEatGuoLuPawn(curtBoardX, curtBoardY, chessBoard);
+                if (canEatPawn)
+                {
+                    BoardIdx boardIdx = chessBoard.LastActionPieceAtBoardIdx;
+                    List<BoardIdx> boardIdxList = new List<BoardIdx>();
+                    boardIdxList.AddRange(eatBoardIdx);
+                    boardIdxList.Add(boardIdx);
+                    eatBoardIdx = boardIdxList.ToArray();
+                }
             }
 
             return eatBoardIdx;
@@ -115,7 +123,10 @@ namespace ChessAutoStepTest
         /// <returns></returns>
         bool CanEatGuoLuPawn(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
+
             Piece piece = chessBoard.GetLastActionPiece();
+            if (piece == null)
+                return false;
 
             //1.吃过路兵是选择性的，若要进行，就要在对方走棋后的下一步马上进行，否则就失去机会
             if (piece.Type != PieceType.Pawn)
