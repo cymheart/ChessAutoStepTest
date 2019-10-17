@@ -58,8 +58,8 @@ namespace ChessAutoStepTest
                 boardIdx.y = curtBoardY + moveOffset[i + 1];
 
                 if (boardIdx.x < 0 || boardIdx.y < 0 ||
-                   boardIdx.x >= chessBoard.RowCount ||
-                   boardIdx.y >= chessBoard.ColCount)
+                   boardIdx.x >= chessBoard.XCount ||
+                   boardIdx.y >= chessBoard.YCount)
                     continue;
 
                 if (chessBoard.IsHavPiece(boardIdx.x, boardIdx.y))
@@ -99,8 +99,8 @@ namespace ChessAutoStepTest
                     }
 
                     if (x < 0 || y < 0 ||              
-                        x >= chessBoard.RowCount ||             
-                        y >= chessBoard.ColCount)
+                        x >= chessBoard.XCount ||             
+                        y >= chessBoard.YCount)
                         break;
 
                     if (chessBoard.IsHavPiece(x, y))
@@ -127,8 +127,8 @@ namespace ChessAutoStepTest
                 boardIdx.y = curtBoardY + eatOffset[i + 1];
 
                 if (boardIdx.x < 0 || boardIdx.y < 0 ||
-                   boardIdx.x >= chessBoard.RowCount ||
-                   boardIdx.y >= chessBoard.ColCount)
+                   boardIdx.x >= chessBoard.XCount ||
+                   boardIdx.y >= chessBoard.YCount)
                     continue;
 
                 if (chessBoard.IsHavPiece(boardIdx.x, boardIdx.y))
@@ -166,8 +166,8 @@ namespace ChessAutoStepTest
                     }
 
                     if (x < 0 || y < 0 ||
-                    x >= chessBoard.RowCount ||
-                    y >= chessBoard.ColCount)
+                    x >= chessBoard.XCount ||
+                    y >= chessBoard.YCount)
                         break;
 
                     if (chessBoard.IsHavPiece(x, y))
