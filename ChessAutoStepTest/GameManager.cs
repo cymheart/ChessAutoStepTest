@@ -13,6 +13,7 @@ namespace ChessAutoStepTest
 
         int chessBoardRowCount;
         int chessBoardColCount;
+        bool IsPiecesRandomPos = true;
 
         public GameManager()
         {
@@ -48,20 +49,65 @@ namespace ChessAutoStepTest
             return piecesCount;
         }
 
-        void CreatePlayerPieces()
+
+        /// <summary>
+        /// 生成标准的玩家棋盘棋子
+        /// </summary>
+        void CreateStandardPlayersBoardPieces()
+        {
+
+        }
+
+
+        /// <summary>
+        /// 生成随机位置的玩家棋盘棋子
+        /// </summary>
+        void CreateRandomPlayersBoardPieces()
         {
             int[] piecesCount0 = RandomPiecesCount();
             int[] piecesCount1 = RandomPiecesCount();
 
+            int pawnCount0 = piecesCount0[(int)PieceType.Pawn];
+            int pawnCount1 = piecesCount1[(int)PieceType.Pawn];
             int totalPiecesCount = 0;
 
-            for(int i=0; i< piecesCount0.Length; i++)
-                totalPiecesCount += piecesCount0[i];
+            for (int i = 0; i < piecesCount0.Length; i++)
+            {
+                if(i != (int)PieceType.Pawn)
+                    totalPiecesCount += piecesCount0[i];
+            }
 
             for (int i = 0; i < piecesCount1.Length; i++)
-                totalPiecesCount += piecesCount1[i];
+            {
+                if (i != (int)PieceType.Pawn)
+                    totalPiecesCount += piecesCount1[i];
+            }
+          
+            List<int> usedBoardIdxs = new List<int>();
+            int[] pawnAtboardXIdxs0 = Utils.Instance.GetRandomNum(null, pawnCount0, 0, 7);
+            usedBoardIdxs.AddRange(usedBoardIdxs);
+            int[] pawnAtboardYIdxs0 = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount0, 1, 7);
+            usedBoardIdxs.AddRange(usedBoardIdxs);
+            int[] pawnAtboardXIdxs1 = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 7);
+            usedBoardIdxs.AddRange(usedBoardIdxs);
+            int[] pawnAtboardYIdxs1 = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 6);
+            usedBoardIdxs.AddRange(usedBoardIdxs);
+            int[] pieceAtboardIdxs = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), totalPiecesCount * 2, 0, 7);
 
-            int[] pieceAtboardIdxs = Utils.Instance.GetRandomNum(totalPiecesCount * 2, 0, 7);
+            //兵不能在出现在最后一行
+            for (int i=0; i<pawnCount0; i++)
+            {
+                Pawn pawn = new Pawn();
+                chessBoard.AppendPiece(pawn, pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
+                players[0].AddBoardPieceRef(pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
+            }
+
+            for (int i = 0; i < pawnCount1; i++)
+            {
+                Pawn pawn = new Pawn();
+                chessBoard.AppendPiece(pawn, pawnAtboardXIdxs1[0], pawnAtboardYIdxs1[1]);
+                players[1].AddBoardPieceRef(pawnAtboardXIdxs1[0], pawnAtboardYIdxs1[1]);
+            }
 
 
             //两个象不能在同一种色块格中
@@ -73,10 +119,20 @@ namespace ChessAutoStepTest
                 CreateTowBishop(pieceIdxList, players[1]);
 
 
-            //
+            //其它棋子加入到棋盘
+            int count;
             for (PieceType i = PieceType.King; i < PieceType.Count; i++)
             {
-               
+                count = piecesCount0[(int)i];
+                if (count == 2 && i == PieceType.Bishop)
+                    continue;
+
+                for(int j=0; j<count; j++)
+                {
+                    Pawn pawn = new Pawn();
+                    chessBoard.AppendPiece(pawn, pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
+                    players[0].AddBoardPieceRef(pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
+                }
             }
         }
 

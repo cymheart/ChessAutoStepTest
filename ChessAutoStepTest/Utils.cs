@@ -19,7 +19,7 @@ namespace ChessAutoStepTest
             }
         }
 
-        public int[] GetRandomNum(int num, int minValue, int maxValue)
+        public int[] GetRandomNum(int[] existArrNum, int num, int minValue, int maxValue)
         {
 
             Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
@@ -31,14 +31,14 @@ namespace ChessAutoStepTest
             for (int i = 0; i <= num - 1; i++)
             {
                 tmp = ra.Next(minValue, maxValue); //随机取数
-                arrNum[i] = GetNum(arrNum, tmp, minValue, maxValue, ra); //取出值赋到数组中
+                arrNum[i] = GetNum(existArrNum, arrNum, tmp, minValue, maxValue, ra); //取出值赋到数组中
             }
 
             return arrNum;
 
         }
 
-        public int GetNum(int[] arrNum, int tmp, int minValue, int maxValue, Random ra)
+        public int GetNum(int[] existArrNum, int[] arrNum, int tmp, int minValue, int maxValue, Random ra)
         {
             int n = 0;
             while (n <= arrNum.Length - 1)
@@ -46,9 +46,24 @@ namespace ChessAutoStepTest
                 if (arrNum[n] == tmp) //利用循环判断是否有重复
                 {
                     tmp = ra.Next(minValue, maxValue);
-                    GetNum(arrNum, tmp, minValue, maxValue, ra);
+                    GetNum(existArrNum, arrNum, tmp, minValue, maxValue, ra);
                 }
                 n++;
+            }
+
+
+            if (existArrNum != null)
+            {
+                n = 0;
+                while (n <= existArrNum.Length - 1)
+                {
+                    if (existArrNum[n] == tmp)
+                    {
+                        tmp = ra.Next(minValue, maxValue);
+                        GetNum(existArrNum, arrNum, tmp, minValue, maxValue, ra);
+                    }
+                    n++;
+                }
             }
 
             return tmp;
