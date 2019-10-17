@@ -18,6 +18,17 @@ namespace ChessAutoStepTest
             0, -1
         };
 
+        static int[] _eatOffsetForward = new int[]
+      {
+            -1,1, 1,1
+      };
+
+        static int[] _eatOffsetReverse = new int[]
+        {
+            -1,-1, 1,-1
+        };
+
+
         public override PieceType Type
         {
             get
@@ -38,10 +49,12 @@ namespace ChessAutoStepTest
                 {
                     case BoardDirection.Forward:
                         moveOffset = _moveOffsetForward;
+                        eatOffset = _eatOffsetForward;
                         break;
 
                     case BoardDirection.Reverse:
                         moveOffset = _moveOffsetReverse;
+                        eatOffset = _eatOffsetReverse;
                         break;
                 }
             }
@@ -58,7 +71,7 @@ namespace ChessAutoStepTest
             moveType = PieceMoveType.Point;
         }
 
-        public override BoardIdx[] ComputeMovePos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        public override BoardIdx[] ComputeMovePos(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             if(IsFirstMove)
             {
@@ -70,27 +83,26 @@ namespace ChessAutoStepTest
                 moveType = PieceMoveType.Line;
             }
 
-            return base.ComputeMovePos(curtRowIdx, curtColIdx, chessBoard);
+            return base.ComputeMovePos(curtBoardX, curtBoardY, chessBoard);
         }
 
-        public override BoardIdx[] ComputeEatPos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        public override BoardIdx[] ComputeEatPos(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
-            if (IsFirstMove)
-            {
-                moveType = PieceMoveType.Point;
-            }
-            else
-            {
-                moveLimitCount = 2;
-                moveType = PieceMoveType.Line;
-            }
+            moveType = PieceMoveType.Point;
+            BoardIdx[] eatBoardIdx = base.ComputeEatPos(curtBoardX, curtBoardY, chessBoard);
 
             //判断是否可以吃过路兵
-            bool canEatPawn = CanEatGuoLuPawn(curtRowIdx, curtColIdx, chessBoard);
+            bool canEatPawn = CanEatGuoLuPawn(curtBoardX, curtBoardY, chessBoard);
+            if(canEatPawn)
+            {
+                BoardIdx boardIdx = chessBoard.LastActionPieceAtBoardIdx;
+                List<BoardIdx> boardIdxList = new List<BoardIdx>();
+                boardIdxList.AddRange(eatBoardIdx);
+                boardIdxList.Add(boardIdx);
+                eatBoardIdx = boardIdxList.ToArray();
+            }
 
-
-
-            return base.ComputeEatPos(curtRowIdx, curtColIdx, chessBoard);
+            return eatBoardIdx;
         }
 
 
@@ -101,33 +113,39 @@ namespace ChessAutoStepTest
         /// <param name="curtColIdx"></param>
         /// <param name="chessBoard"></param>
         /// <returns></returns>
-        bool CanEatGuoLuPawn(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        bool CanEatGuoLuPawn(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             Piece piece = chessBoard.GetLastActionPiece();
 
-            if (piece.Type == PieceType.Pawn)
+            //1.吃过路兵是选择性的，若要进行，就要在对方走棋后的下一步马上进行，否则就失去机会
+            if (piece.Type != PieceType.Pawn)
+                return false;
+
+            //2.要吃子的兵需在其第五行
+            if (PieceAtBoardDir == BoardDirection.Forward)
             {
-
-                //1.要吃子的兵需在其第五行
-                if (PieceAtBoardDir == BoardDirection.Forward)
-                {
-                    if (curtColIdx != 4)
-                        return false;
-                }
-                else if(PieceAtBoardDir == BoardDirection.Reverse)
-                {
-                    if (curtColIdx != 3)
-                        return false;
-                }
-
-                //2.被吃子的兵需在相邻的列，而且一次就移动二格。
-                BoardIdx boardIdx = chessBoard.LastActionPieceAtBoardIdx;
-                if(boardIdx.col = )
-
-
+                if (curtBoardY != 4)
+                    return false;
+            }
+            else if (PieceAtBoardDir == BoardDirection.Reverse)
+            {
+                if (curtBoardY != 3)
+                    return false;
             }
 
-            return false;
+            //3.被吃子的兵需在相邻的列，而且一次就移动二格。
+            BoardIdx boardIdx = chessBoard.LastActionPieceAtBoardIdx;
+            BoardIdx prevBoardIdx = chessBoard.LastActionPieceAtPrevBoardIdx;
+
+            if (prevBoardIdx.y + 2 != boardIdx.y)  //没有一次移动两格
+                return false;
+
+            //不在相邻位置上
+            if (!((boardIdx.x != curtBoardX - 1 && boardIdx.y != curtBoardY) ||                  
+                (boardIdx.x != curtBoardX + 1 && boardIdx.y != curtBoardY)))
+                    return false;
+
+            return true;
         }
 
     }

@@ -8,8 +8,16 @@ namespace ChessAutoStepTest
 {
     public class Piece
     {
+        /// <summary>
+        /// 移动偏移方向
+        /// </summary>
         protected int[] moveOffset;
+
+        /// <summary>
+        /// 吃偏移方向
+        /// </summary>
         protected int[] eatOffset;
+
         protected PieceMoveType moveType = PieceMoveType.Point;
         protected int moveLimitCount = -1;
 

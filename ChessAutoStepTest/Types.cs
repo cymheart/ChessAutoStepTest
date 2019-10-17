@@ -50,17 +50,32 @@ namespace ChessAutoStepTest
       
     }
 
+
+    /// <summary>
+    /// 棋盘标号
+    /// </summary>
     public struct BoardIdx
     {
         public int x;
         public int y;
     }
 
+    /// <summary>
+    /// 棋子的移动方式
+    /// </summary>
     public enum PieceMoveType
     {
+        /// <summary>
+        /// 线方式移动
+        /// </summary>
         Line,
+
+        /// <summary>
+        /// 点方式移动
+        /// </summary>
         Point
     }
+
 
     public enum BoardDirection
     {
