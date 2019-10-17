@@ -127,6 +127,30 @@ namespace ChessAutoStepTest
                 return (curtPlayPlayerIdx + 1) % playerCount;
         }
 
+        /// <summary>
+        /// 吃棋子
+        /// </summary>
+        /// <param name="player">当前吃子玩家</param>
+        /// <param name="eatBoardIdx"></param>
+        /// <param name="beEatBoardIdx"></param>
+        void Eat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx)
+        {
+            int nextPlayerIdx = GetNextPlayerIdx();
+            player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
+            players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);
+        }
+
+        /// <summary>
+        /// 移动棋子
+        /// </summary>
+        /// <param name="player">当前移子玩家</param>
+        /// <param name="moveBoardIdx"></param>
+        /// <param name="dstBoardIdx"></param>
+        void Move(Player player, BoardIdx moveBoardIdx, BoardIdx dstBoardIdx)
+        {
+            player.EatOrMoveBoardPiece(moveBoardIdx, dstBoardIdx);
+        }
+
 
         /// <summary>
         /// 玩家策略走棋
@@ -141,8 +165,7 @@ namespace ChessAutoStepTest
             BoardIdx? canEatKingBoardIdx = player.GetCanEatBoardIdx(kingBoardIdx[0]);
             if(canEatKingBoardIdx != null)
             {
-                player.EatOrMoveBoardPiece(canEatKingBoardIdx.Value, kingBoardIdx[0]);
-                players[nextPlayerIdx].DelBoardPieceRef(kingBoardIdx[0].x, kingBoardIdx[0].y);
+                Eat(player, canEatKingBoardIdx.Value, kingBoardIdx[0]);
                 return;
             }
 
@@ -161,8 +184,7 @@ namespace ChessAutoStepTest
 
                     for (int i = 0; i < eatPos.Length; i++)
                     {
-                        player.EatOrMoveBoardPiece(kingBoardIdx[0], eatPos[i]);
-                        players[nextPlayerIdx].DelBoardPieceRef(eatPos[i].x, eatPos[i].y);
+                        Eat(player, kingBoardIdx[0], eatPos[i]);
 
                         kingBoardIdx[0] = eatPos[i];
                         canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(kingBoardIdx[0]);
@@ -178,7 +200,7 @@ namespace ChessAutoStepTest
 
                     for (int i = 0; i < movePos.Length; i++)
                     {
-                        player.EatOrMoveBoardPiece(kingBoardIdx[0], movePos[i]);
+                        Move(player, kingBoardIdx[0], movePos[i]);
 
                         kingBoardIdx[0] = movePos[i];
                         canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(kingBoardIdx[0]);
@@ -204,8 +226,8 @@ namespace ChessAutoStepTest
                 Random ra = Tools.Instance.Rand();
                 int eatIdx = ra.Next(0, canEatBoardIdxs.Length - 1);
                 BoardIdx eatBoardIdx = canEatBoardIdxs[eatIdx];
-                player.EatOrMoveBoardPiece(boardIdx.Value, eatBoardIdx);
-                players[nextPlayerIdx].DelBoardPieceRef(eatBoardIdx.x, eatBoardIdx.y);
+
+                Eat(player, boardIdx.Value, eatBoardIdx);
             }
             else
             { 
@@ -216,7 +238,8 @@ namespace ChessAutoStepTest
                 Random ra = Tools.Instance.Rand();
                 int moveIdx = ra.Next(0, canMoveBoardIdxs.Length - 1);
                 BoardIdx moveBoardIdx = canMoveBoardIdxs[moveIdx];
-                player.EatOrMoveBoardPiece(boardIdx.Value, moveBoardIdx);
+
+                Move(player, boardIdx.Value, moveBoardIdx);
             }
         }
 
