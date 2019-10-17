@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
-    public class Queen : Piece
+    public class Pawn : Piece
     {
-       static int[] _offset = new int[]
-      {
+        static int[] _offset = new int[]
+        {
             -1, 1,0,1, 1,1,
             -1, 0,1,0,
             -1,-1,0,-1,1,-1
-      };
+        };
 
-        public Queen()
+        public Pawn()
         {
-            moveType = PieceMoveType.Line;
-            moveOffset = _offset;
-            eatOffset = _offset;
+            moveType = PieceMoveType.Point;
+            offset = _offset;
         }
 
     }

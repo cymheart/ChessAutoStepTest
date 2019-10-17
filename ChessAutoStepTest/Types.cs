@@ -11,4 +11,10 @@ namespace ChessAutoStepTest
         public int row;
         public int col;
     }
+
+    public enum PieceMoveType
+    {
+        Line,
+        Point
+    }
 }

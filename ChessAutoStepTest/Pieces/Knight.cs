@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
-    public class Queen : Piece
+    public class Knight : Piece
     {
-       static int[] _offset = new int[]
+        static int[] _offset = new int[]
       {
-            -1, 1,0,1, 1,1,
-            -1, 0,1,0,
-            -1,-1,0,-1,1,-1
+            -1,2, 1,2,
+            2, 1, 2,-1,
+            1,-2, -1,-2,
+            -2,-1, -2,1
       };
 
-        public Queen()
+        public Knight()
         {
-            moveType = PieceMoveType.Line;
+            moveType = PieceMoveType.Point;
             moveOffset = _offset;
             eatOffset = _offset;
         }
-
     }
 }

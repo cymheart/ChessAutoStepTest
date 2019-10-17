@@ -8,59 +8,18 @@ namespace ChessAutoStepTest
 {
     public class King :Piece
     {
-        static int[] offset = new int[]    
+        static int[] _offset = new int[]    
         {
             -1, 1,0,1, 1,1,
             -1, 0,1,0,
             -1,-1,0,-1,1,-1
         };
 
-        public override BoardIdx[] ComputeMovePos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
+        public King()
         {
-            List<BoardIdx> boardIdxList = new List<BoardIdx>();
-
-            BoardIdx boardIdx = new BoardIdx();
-            for (int i = 0; i < offset.Length; i+=2)
-            {
-                boardIdx.row = curtRowIdx + offset[i];
-                boardIdx.col = curtColIdx + offset[i+1];
-
-                if (boardIdx.row < 0 || boardIdx.col < 0 ||
-                   boardIdx.row >= chessBoard.RowCount ||
-                   boardIdx.col >= chessBoard.ColCount)
-                    continue;
-
-                if (chessBoard.IsHavPiece(boardIdx.row, boardIdx.col))
-                    continue;
-
-                boardIdxList.Add(boardIdx);
-            }
-
-            return boardIdxList.ToArray();
+            moveType = PieceMoveType.Point;
+            moveOffset = _offset;
+            eatOffset = _offset;
         }
-
-        public override BoardIdx[] ComputeEatPos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
-        {
-            List<BoardIdx> boardIdxList = new List<BoardIdx>();
-
-            BoardIdx boardIdx = new BoardIdx();
-            for (int i = 0; i < offset.Length; i += 2)
-            {
-                boardIdx.row = curtRowIdx + offset[i];
-                boardIdx.col = curtColIdx + offset[i + 1];
-
-                if (boardIdx.row < 0 || boardIdx.col < 0 ||
-                   boardIdx.row >= chessBoard.RowCount ||
-                   boardIdx.col >= chessBoard.ColCount)
-                    continue;
-
-                if (chessBoard.IsHavPiece(boardIdx.row, boardIdx.col))
-                    boardIdxList.Add(boardIdx);
-            }
-
-            return boardIdxList.ToArray();
-        }
-
-
     }
 }
