@@ -53,11 +53,13 @@
       <DependentUpon>Chess.cs</DependentUpon>
     </Compile>
     <Compile Include="Chessboard.cs" />
-    <Compile Include="Piece.cs" />
+    <Compile Include="Piece\KingPiece.cs" />
+    <Compile Include="Piece\Piece.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types.cs" />
     <EmbeddedResource Include="Chess.resx">
       <DependentUpon>Chess.cs</DependentUpon>
     </EmbeddedResource>

@@ -8,9 +8,27 @@ namespace ChessAutoStepTest
 {
     public class PlayManager
     {
+        Player[] players;
         Chessboard chessBoard;
 
-        void 
+        int chessBoardRowCount;
+        int chessBoardColCount;
+
+        public PlayManager()
+        {
+            players = new Player[2]
+            {
+                new Player(),
+                new Player()
+            };
+        }
+
+        public void Create()
+        {
+            chessBoard.RowCount = chessBoardRowCount;
+            chessBoard.ColCount = chessBoardColCount;
+            chessBoard.Create();
+        }
 
     }
 }

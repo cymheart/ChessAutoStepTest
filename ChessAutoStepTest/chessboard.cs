@@ -8,8 +8,8 @@ namespace ChessAutoStepTest
 {
     public class Chessboard
     {
-        int rowCount;
-        int colCount;
+        public int RowCount;
+        public int ColCount;
 
         Piece[,] boardPieces;
 
@@ -20,7 +20,7 @@ namespace ChessAutoStepTest
 
         public void Create()
         {
-            boardPieces = new Piece[rowCount, colCount];
+            boardPieces = new Piece[RowCount, ColCount];
         }
 
     }
