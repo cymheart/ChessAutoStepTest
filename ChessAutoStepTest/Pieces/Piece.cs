@@ -21,6 +21,8 @@ namespace ChessAutoStepTest
         protected PieceMoveType moveType = PieceMoveType.Point;
         protected int moveLimitCount = -1;
 
+        public ChessColor Color = ChessColor.None;
+
         public virtual PieceType Type
         {
             get
@@ -140,7 +142,11 @@ namespace ChessAutoStepTest
                     continue;
 
                 if (chessBoard.IsHavPiece(boardIdx.x, boardIdx.y))
-                    boardIdxList.Add(boardIdx);
+                {
+                    Piece piece = chessBoard.GetPiece(boardIdx);
+                    if(piece.Color != Color)
+                        boardIdxList.Add(boardIdx);
+                }
             }
 
             return boardIdxList.ToArray();
@@ -182,7 +188,11 @@ namespace ChessAutoStepTest
                     {
                         boardIdx.x = x;
                         boardIdx.y = y;
-                        boardIdxList.Add(boardIdx);
+
+                        Piece piece = chessBoard.GetPiece(boardIdx);
+                        if (piece.Color != Color)
+                            boardIdxList.Add(boardIdx);
+
                         break;
                     }
                 }

@@ -13,6 +13,8 @@ namespace ChessAutoStepTest
             0,1, -1, 0, 1,0, 0,-1,
      };
 
+
+
         public override PieceType Type
         {
             get

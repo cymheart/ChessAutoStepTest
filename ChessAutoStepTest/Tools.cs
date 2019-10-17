@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ChessAutoStepTest
 {
-    public class Utils
+    public class Tools
     {
-        private static Utils instance = null;
-        public static Utils Instance
+        private static Tools instance = null;
+        public static Tools Instance
         {
             get
             {
                 if (instance == null)
-                    instance = new Utils();
+                    instance = new Tools();
                 return instance;
             }
         }
@@ -41,7 +41,13 @@ namespace ChessAutoStepTest
             return null;
         }
 
-            public int[] GetRandomNum(int[] existArrNum, int num, int minValue, int maxValue)
+        public Random Rand()
+        {
+            Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
+            return ra;
+        }
+
+        public int[] GetRandomNum(int[] existArrNum, int num, int minValue, int maxValue)
         {
 
             Random ra = new Random(unchecked((int)DateTime.Now.Ticks));

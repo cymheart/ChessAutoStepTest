@@ -123,13 +123,12 @@ namespace ChessAutoStepTest
         /// <returns></returns>
         bool CanEatGuoLuPawn(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
-
-            Piece piece = chessBoard.GetLastActionPiece();
-            if (piece == null)
+            Piece lastBoardPiece = chessBoard.GetLastActionPiece();
+            if (lastBoardPiece == null || lastBoardPiece.Color == Color)
                 return false;
 
             //1.吃过路兵是选择性的，若要进行，就要在对方走棋后的下一步马上进行，否则就失去机会
-            if (piece.Type != PieceType.Pawn)
+            if (lastBoardPiece.Type != PieceType.Pawn)
                 return false;
 
             //2.要吃子的兵需在其第五行

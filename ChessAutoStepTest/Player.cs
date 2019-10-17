@@ -10,7 +10,6 @@ namespace ChessAutoStepTest
     {
         public LinkedList<int> chessBoardPiecePos = new LinkedList<int>();
 
-
         public void DelBoardPieceRef(int boardX, int boardY)
         {
             int key = GetPieceKeyForBoardIdx(boardX, boardY);
@@ -29,12 +28,20 @@ namespace ChessAutoStepTest
             return (boardX << 12) | boardY;
         }
 
-        public BoardIdx GetPieceKeyBoardIdx(int pieceKey)
+        BoardIdx GetPieceKeyBoardIdx(int pieceKey)
         {
             BoardIdx boardIdx = new BoardIdx();
             boardIdx.x = pieceKey >> 12;
             boardIdx.y = pieceKey & 0xfff;
             return boardIdx;
+        }
+
+        public BoardIdx GetRandomPieceBoardIdx()
+        {
+            Random ra = Tools.Instance.Rand();
+            int pieceKey = ra.Next(0, chessBoardPiecePos.Count - 1);
+            BoardIdx idx = GetPieceKeyBoardIdx(pieceKey);
+            return idx;
         }
     }
 }

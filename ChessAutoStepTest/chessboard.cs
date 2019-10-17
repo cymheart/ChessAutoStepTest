@@ -40,6 +40,10 @@ namespace ChessAutoStepTest
             boardPieces[x, y] = piece;
         }
 
+        public Piece GetPiece(BoardIdx boardIdx)
+        {
+            return boardPieces[boardIdx.x, boardIdx.y];
+        }
 
         public Piece GetLastActionPiece()
         {
@@ -56,18 +60,18 @@ namespace ChessAutoStepTest
             return false;
         }
 
-        public BoardCellColor GetCellColor(int x, int y)
+        public ChessColor GetCellColor(int x, int y)
         {
-            BoardCellColor color = BoardCellColor.White;
+            ChessColor color = ChessColor.White;
             if (x % 2 == 0)
-                color = BoardCellColor.Black;
+                color = ChessColor.Black;
 
             if (y % 2 != 0)
             {
-                if (color == BoardCellColor.White)
-                    color = BoardCellColor.Black;
+                if (color == ChessColor.White)
+                    color = ChessColor.Black;
                 else
-                    color = BoardCellColor.White;
+                    color = ChessColor.White;
             }
 
             return color;

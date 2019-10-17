@@ -16,6 +16,11 @@ namespace ChessAutoStepTest
         bool IsRandomPiecesPos = true;
         bool IsRandomPiecesCount = false;
 
+        int firstPlayPlayerIdx = 0;
+        ChessColor[] playerPieceColor = { ChessColor.White, ChessColor.Black};
+        int playerCount = 2;
+        int curtPlayPlayerIdx;
+
         public GameManager()
         {
             players = new Player[2]
@@ -37,7 +42,59 @@ namespace ChessAutoStepTest
                 new Player()
            };
 
+            curtPlayPlayerIdx = -1;
+
             CreatePlayersBoardPieces();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void CompputeGameResult()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                TurnToNextPlayer();
+
+
+
+
+            }
+
+        }
+
+
+        void TurnToNextPlayer()
+        {
+            if (curtPlayPlayerIdx == -1)
+                curtPlayPlayerIdx = firstPlayPlayerIdx;
+            else
+                curtPlayPlayerIdx = (firstPlayPlayerIdx + 1) % playerCount;
+        }
+
+
+        void dd(Player player)
+        {
+            BoardIdx boardIdx = player.GetRandomPieceBoardIdx();
+            Piece piece = chessBoard.GetPiece(boardIdx);
+
+            //优先吃棋子
+            BoardIdx[] canEatBoardIdxs = piece.ComputeEatPos(boardIdx.x, boardIdx.y, chessBoard);
+            if(canEatBoardIdxs.Length != 0)
+            {
+                Random ra = Tools.Instance.Rand();
+                int eatIdx = ra.Next(0, canEatBoardIdxs.Length - 1);
+                BoardIdx eatBoardIdx = canEatBoardIdxs[eatIdx];
+
+
+
+
+            }
+
+
+            //没有吃的情况下，随机移动棋子
+            BoardIdx[] canMoveBoardIdxs = piece.ComputeMovePos(boardIdx.x, boardIdx.y, chessBoard);
         }
 
 
@@ -57,11 +114,11 @@ namespace ChessAutoStepTest
         /// </summary>
         void CreateStandardPlayersBoardPieces()
         {
-            CreateStandardPlayerBoardPieces(players[0], BoardDirection.Forward);
-            CreateStandardPlayerBoardPieces(players[1], BoardDirection.Reverse);
+            CreateStandardPlayerBoardPieces(players[0], playerPieceColor[0], BoardDirection.Forward);
+            CreateStandardPlayerBoardPieces(players[1], playerPieceColor[1], BoardDirection.Reverse);
         }
 
-        void CreateStandardPlayerBoardPieces(Player player, BoardDirection dir)
+        void CreateStandardPlayerBoardPieces(Player player, ChessColor color, BoardDirection dir)
         {
             int pawnY = 1;
             int kingY = 0;
@@ -76,43 +133,57 @@ namespace ChessAutoStepTest
             for (int i = 0; i < 8; i++)
             {
                 Pawn pawn = new Pawn();
+                pawn.PieceAtBoardDir = dir;
+                pawn.IsFirstMove = true;
                 chessBoard.AppendPiece(pawn, i, pawnY);
-                players[0].AddBoardPieceRef(i, pawnY);
+                player.AddBoardPieceRef(i, pawnY);
+                pawn.Color = color;     
             }
 
             //Rook
-            Piece piece = Utils.Instance.CreatePiece(PieceType.Rook);
+            Piece piece = Tools.Instance.CreatePiece(PieceType.Rook);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 0, kingY);
-            players[0].AddBoardPieceRef(0, kingY);
-            piece = Utils.Instance.CreatePiece(PieceType.Rook);
+            player.AddBoardPieceRef(0, kingY);
+
+            piece = Tools.Instance.CreatePiece(PieceType.Rook);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 7, kingY);
-            players[0].AddBoardPieceRef(7, kingY);
+            player.AddBoardPieceRef(7, kingY);
 
             //Knight
-            piece = Utils.Instance.CreatePiece(PieceType.Knight);
+            piece = Tools.Instance.CreatePiece(PieceType.Knight);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 1, kingY);
-            players[0].AddBoardPieceRef(1, kingY);
-            piece = Utils.Instance.CreatePiece(PieceType.Knight);
+            player.AddBoardPieceRef(1, kingY);
+
+            piece = Tools.Instance.CreatePiece(PieceType.Knight);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 6, kingY);
-            players[0].AddBoardPieceRef(6, kingY);
+            player.AddBoardPieceRef(6, kingY);
 
             //Bishop
-            piece = Utils.Instance.CreatePiece(PieceType.Bishop);
+            piece = Tools.Instance.CreatePiece(PieceType.Bishop);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 2, kingY);
-            players[0].AddBoardPieceRef(2, kingY);
-            piece = Utils.Instance.CreatePiece(PieceType.Bishop);
+            player.AddBoardPieceRef(2, kingY);
+
+            piece = Tools.Instance.CreatePiece(PieceType.Bishop);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 5, kingY);
-            players[0].AddBoardPieceRef(5, kingY);
+            player.AddBoardPieceRef(5, kingY);
 
             //King
-            piece = Utils.Instance.CreatePiece(PieceType.King);
+            piece = Tools.Instance.CreatePiece(PieceType.King);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 3, kingY);
-            players[0].AddBoardPieceRef(3, kingY);
+            player.AddBoardPieceRef(3, kingY);
 
             //Queen
-            piece = Utils.Instance.CreatePiece(PieceType.Queen);
+            piece = Tools.Instance.CreatePiece(PieceType.Queen);
+            piece.Color = color;
             chessBoard.AppendPiece(piece, 4, kingY);
-            players[0].AddBoardPieceRef(4, kingY);
+            player.AddBoardPieceRef(4, kingY);
         }
 
 
@@ -141,20 +212,21 @@ namespace ChessAutoStepTest
             }
           
             List<int> usedBoardIdxs = new List<int>();
-            int[] pawnAtboardXIdxs0 = Utils.Instance.GetRandomNum(null, pawnCount0, 0, 7);
+            int[] pawnAtboardXIdxs0 = Tools.Instance.GetRandomNum(null, pawnCount0, 0, 7);
             usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pawnAtboardYIdxs0 = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount0, 1, 7);
+            int[] pawnAtboardYIdxs0 = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount0, 1, 7);
             usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pawnAtboardXIdxs1 = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 7);
+            int[] pawnAtboardXIdxs1 = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 7);
             usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pawnAtboardYIdxs1 = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 6);
+            int[] pawnAtboardYIdxs1 = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), pawnCount1, 0, 6);
             usedBoardIdxs.AddRange(usedBoardIdxs);
-            int[] pieceAtboardIdxs = Utils.Instance.GetRandomNum(usedBoardIdxs.ToArray(), totalPiecesCount * 2, 0, 7);
+            int[] pieceAtboardIdxs = Tools.Instance.GetRandomNum(usedBoardIdxs.ToArray(), totalPiecesCount * 2, 0, 7);
 
             //兵不能在出现在第一行
             for (int i=0; i<pawnCount0; i++)
             {
                 Pawn pawn = new Pawn();
+                pawn.Color = playerPieceColor[0];
                 chessBoard.AppendPiece(pawn, pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
                 players[0].AddBoardPieceRef(pawnAtboardXIdxs0[0], pawnAtboardYIdxs0[1]);
             }
@@ -162,6 +234,7 @@ namespace ChessAutoStepTest
             for (int i = 0; i < pawnCount1; i++)
             {
                 Pawn pawn = new Pawn();
+                pawn.Color = playerPieceColor[1];
                 chessBoard.AppendPiece(pawn, pawnAtboardXIdxs1[0], pawnAtboardYIdxs1[1]);
                 players[1].AddBoardPieceRef(pawnAtboardXIdxs1[0], pawnAtboardYIdxs1[1]);
             }
@@ -170,10 +243,10 @@ namespace ChessAutoStepTest
             //两个象不能在同一种色块格中
             List<int> pieceIdxList = new List<int>(pieceAtboardIdxs);
             if(piecesCount0[(int)PieceType.Bishop] == 2)
-                CreateTowBishop(pieceIdxList, players[0]);
+                CreateTowBishop(pieceIdxList, players[0], playerPieceColor[0]);
 
             if (piecesCount1[(int)PieceType.Bishop] == 2)
-                CreateTowBishop(pieceIdxList, players[1]);
+                CreateTowBishop(pieceIdxList, players[1], playerPieceColor[1]);
 
 
             //其它玩家的剩余棋子加入到棋盘
@@ -187,7 +260,8 @@ namespace ChessAutoStepTest
 
                 for(int j = 0; j < count; j++)
                 {
-                    Piece piece = Utils.Instance.CreatePiece(i);
+                    Piece piece = Tools.Instance.CreatePiece(i);
+                    piece.Color = playerPieceColor[0];
                     chessBoard.AppendPiece(piece, pieceIdxList[idx], pieceIdxList[idx + 1]);
                     players[0].AddBoardPieceRef(pieceIdxList[idx], pieceIdxList[idx + 1]);
                     idx += 2;
@@ -203,7 +277,8 @@ namespace ChessAutoStepTest
 
                 for (int j = 0; j < count; j++)
                 {
-                    Piece piece = Utils.Instance.CreatePiece(i);
+                    Piece piece = Tools.Instance.CreatePiece(i);
+                    piece.Color = playerPieceColor[1];
                     chessBoard.AppendPiece(piece, pieceIdxList[idx], pieceIdxList[idx + 1]);
                     players[1].AddBoardPieceRef(pieceIdxList[idx], pieceIdxList[idx + 1]);
                     idx += 2;
@@ -216,7 +291,7 @@ namespace ChessAutoStepTest
 
             if (IsRandomPiecesCount)
             {
-                Random ra = new Random(unchecked((int)DateTime.Now.Ticks));
+                Random ra = Tools.Instance.Rand();
                 piecesCount[(int)PieceType.Queen] = ra.Next(0, 1);
                 piecesCount[(int)PieceType.Knight] = ra.Next(0, 2);
                 piecesCount[(int)PieceType.Rook] = ra.Next(0, 2);
@@ -228,22 +303,24 @@ namespace ChessAutoStepTest
         }
 
         //两个象不能在同一种色块格中
-        void CreateTowBishop(List<int> pieceIdxList, Player player)
+        void CreateTowBishop(List<int> pieceIdxList, Player player, ChessColor chessColor)
         {
             Bishop bishop = new Bishop();
+            bishop.Color = chessColor;
             chessBoard.AppendPiece(bishop, pieceIdxList[0], pieceIdxList[1]);
             player.AddBoardPieceRef(pieceIdxList[0], pieceIdxList[1]);
-            BoardCellColor color1 = chessBoard.GetCellColor(pieceIdxList[0], pieceIdxList[1]);
+            ChessColor color1 = chessBoard.GetCellColor(pieceIdxList[0], pieceIdxList[1]);
             pieceIdxList.RemoveAt(0);
             pieceIdxList.RemoveAt(1);
 
-            BoardCellColor color2;
+            ChessColor color2;
             for (int i = 0; i < pieceIdxList.Count; i += 2)
             {
                 color2 = chessBoard.GetCellColor(pieceIdxList[i], pieceIdxList[i + 1]);
                 if (color2 != color1)
                 {
                     bishop = new Bishop();
+                    bishop.Color = chessColor;
                     chessBoard.AppendPiece(bishop, pieceIdxList[i], pieceIdxList[i + 1]);
                     player.AddBoardPieceRef(pieceIdxList[i], pieceIdxList[i+1]);
                     pieceIdxList.RemoveAt(i);
