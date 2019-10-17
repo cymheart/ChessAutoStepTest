@@ -144,14 +144,7 @@ namespace ChessAutoStepTest
 
         public void EatOrMoveBoardPiece(BoardIdx playerBoardIdx, BoardIdx dstBoardIdx)
         {
-            Piece piece = chessBoard.GetPiece(playerBoardIdx);
-            piece.IsFirstMove = false;
-
-            chessBoard.RemovePiece(playerBoardIdx.x, playerBoardIdx.y);
-            chessBoard.LastActionPieceAtPrevBoardIdx = playerBoardIdx;
-
-            chessBoard.AppendPiece(piece, dstBoardIdx.x, dstBoardIdx.y);
-
+            chessBoard.MovePiece(playerBoardIdx, dstBoardIdx);
             DelBoardPieceRef(playerBoardIdx.x, playerBoardIdx.y);
             AddBoardPieceRef(dstBoardIdx.x, dstBoardIdx.y);
         }

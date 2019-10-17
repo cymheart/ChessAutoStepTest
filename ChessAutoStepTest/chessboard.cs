@@ -30,6 +30,16 @@ namespace ChessAutoStepTest
             LastActionPieceAtPrevBoardIdx = new BoardIdx() { x = -1, y = -1 };
         }
 
+        public void MovePiece(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx)
+        {
+            Piece piece = GetPiece(orgBoardIdx);
+            piece.IsFirstMove = false;
+            RemovePiece(orgBoardIdx.x, orgBoardIdx.y);
+            LastActionPieceAtPrevBoardIdx = orgBoardIdx;
+            AppendPiece(piece, dstBoardIdx.x, dstBoardIdx.y);
+        }
+
+
         public void AppendPiece(Piece piece, int x, int y)
         {
             if (x < 0 || x >= XCount || y < 0 || y >= YCount)

@@ -38,6 +38,18 @@ namespace ChessAutoStepTest
             }
         }
 
+        public override string Desc
+        {
+            get
+            {
+                string color = "黑";
+                if (Color == ChessColor.White)
+                    color = "白";
+                string msg = color + "兵";
+                return msg;
+            }
+        }
+
         BoardDirection pieceAtBoardDir;
         public BoardDirection PieceAtBoardDir
         {

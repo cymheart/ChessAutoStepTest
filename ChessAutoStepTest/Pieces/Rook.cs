@@ -24,6 +24,18 @@ namespace ChessAutoStepTest
             }
         }
 
+        public override string Desc
+        {
+            get
+            {
+                string color = "黑";
+                if (Color == ChessColor.White)
+                    color = "白";
+                string msg = color + "车";
+                return msg;
+            }
+        }
+
         public Rook()
         {
             moveType = PieceMoveType.Line;

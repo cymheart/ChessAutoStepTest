@@ -37,6 +37,18 @@ namespace ChessAutoStepTest
             }
         }
 
+        public virtual string Desc
+        {
+            get
+            {
+                string color = "黑";
+                if (Color == ChessColor.White)
+                    color = "白";
+                string msg = color + "棋";
+                return msg;
+            }
+        }
+
         public virtual BoardIdx[] ComputeMovePos(int curtBoardX, int curtBoardY, Chessboard chessBoard)
         {
             switch (moveType)

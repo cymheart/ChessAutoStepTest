@@ -25,6 +25,18 @@ namespace ChessAutoStepTest
             }
         }
 
+        public override string Desc
+        {
+            get
+            {
+                string color = "黑";
+                if (Color == ChessColor.White)
+                    color = "白";
+                string msg = color + "马";
+                return msg;
+            }
+        }
+
         public Knight()
         {
             moveType = PieceMoveType.Point;

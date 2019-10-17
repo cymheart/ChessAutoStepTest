@@ -85,6 +85,20 @@ namespace ChessAutoStepTest
     }
 
 
+    public enum ChessCmdType
+    {
+        /// <summary>
+        /// 吃命令
+        /// </summary>
+        Eat,
+
+        /// <summary>
+        /// 移动命令
+        /// </summary>
+        Move
+    }
+
+
     public enum BoardDirection
     {
         Forward,
