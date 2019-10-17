@@ -64,14 +64,21 @@ namespace ChessAutoStepTest
             int[] pieceAtboardIdxs = Utils.Instance.GetRandomNum(totalPiecesCount * 2, 0, 7);
 
 
-            //两个象不能在同一种色块中
+            //两个象不能在同一种色块格中
             List<int> pieceIdxList = new List<int>(pieceAtboardIdxs);
             if(piecesCount0[(int)PieceType.Bishop] >= 2)
             {
                 Bishop bishop = new Bishop();
                 chessBoard.AppendPiece(bishop, pieceIdxList[0], pieceIdxList[1]);
+                BoardCellColor color = chessBoard.GetCellColor(pieceIdxList[0], pieceIdxList[1]);
                 pieceIdxList.RemoveAt(0);
                 pieceIdxList.RemoveAt(1);
+
+                for(int i=0; i< pieceIdxList.Count; i++)
+                {
+
+                }
+
             }
 
 

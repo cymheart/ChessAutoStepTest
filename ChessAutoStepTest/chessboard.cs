@@ -56,6 +56,21 @@ namespace ChessAutoStepTest
             return false;
         }
 
+        public BoardCellColor GetCellColor(int x, int y)
+        {
+            BoardCellColor color = BoardCellColor.White;
+            if (x % 2 == 0)
+                color = BoardCellColor.Black;
 
+            if (y % 2 != 0)
+            {
+                if (color == BoardCellColor.White)
+                    color = BoardCellColor.Black;
+                else
+                    color = BoardCellColor.White;
+            }
+
+            return color;
+        }
     }
 }

@@ -52,6 +52,7 @@ namespace ChessAutoStepTest
 
     public enum BoardCellColor:int
     {
+        None,
         White,
         Black  
     }
