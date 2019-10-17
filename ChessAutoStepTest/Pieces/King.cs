@@ -8,17 +8,16 @@ namespace ChessAutoStepTest
 {
     public class King :Piece
     {
+        static int[] offset = new int[]    
+        {
+            -1, 1,0,1, 1,1,
+            -1, 0,1,0,
+            -1,-1,0,-1,1,-1
+        };
 
         public override BoardIdx[] ComputeMovePos(int curtRowIdx, int curtColIdx, Chessboard chessBoard)
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
-
-            int[] offset = new int[]
-            {
-                -1, 1,0,1, 1,1,
-                -1, 0,1,0,
-                -1,-1,0,-1,1,-1
-            };
 
             BoardIdx boardIdx = new BoardIdx();
             for (int i = 0; i < offset.Length; i+=2)
@@ -44,13 +43,6 @@ namespace ChessAutoStepTest
         {
             List<BoardIdx> boardIdxList = new List<BoardIdx>();
 
-            int[] offset = new int[]
-            {
-                -1, 1,0,1, 1,1,
-                -1, 0,1,0,
-                -1,-1,0,-1,1,-1
-            };
-
             BoardIdx boardIdx = new BoardIdx();
             for (int i = 0; i < offset.Length; i += 2)
             {
@@ -63,9 +55,7 @@ namespace ChessAutoStepTest
                     continue;
 
                 if (chessBoard.IsHavPiece(boardIdx.row, boardIdx.col))
-                    continue;
-
-                boardIdxList.Add(boardIdx);
+                    boardIdxList.Add(boardIdx);
             }
 
             return boardIdxList.ToArray();

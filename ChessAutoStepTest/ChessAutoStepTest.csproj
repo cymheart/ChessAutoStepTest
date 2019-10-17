@@ -53,8 +53,9 @@
       <DependentUpon>Chess.cs</DependentUpon>
     </Compile>
     <Compile Include="Chessboard.cs" />
-    <Compile Include="Piece\King.cs" />
-    <Compile Include="Piece\Piece.cs" />
+    <Compile Include="Pieces\King.cs" />
+    <Compile Include="Pieces\Piece.cs" />
+    <Compile Include="Pieces\Queen.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Program.cs" />
