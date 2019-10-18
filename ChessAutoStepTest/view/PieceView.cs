@@ -11,13 +11,15 @@ namespace ChessAutoStepTest
     {
         public Piece piece;
         public Image img;
+        int width;
+        int height;
 
         public PieceView(string imgName)
         {
             img = Resource.Load(imgName);
         }
 
-        public void Draw(Graphics g, Point pos, int width, int height)
+        public void Draw(Graphics g, Point pos)
         {
             g.DrawImage(img, pos.X, pos.Y, width, height);
         }

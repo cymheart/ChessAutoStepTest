@@ -54,7 +54,7 @@
     <Compile Include="view\Chess.Designer.cs">
       <DependentUpon>Chess.cs</DependentUpon>
     </Compile>
-    <Compile Include="view\ChessView.cs" />
+    <Compile Include="view\BoardView.cs" />
     <Compile Include="core\Chessboard.cs" />
     <Compile Include="core\RecordManager.cs" />
     <Compile Include="core\Pieces\Bishop.cs" />
@@ -72,6 +72,8 @@
     <Compile Include="core\Types.cs" />
     <Compile Include="core\Tools.cs" />
     <Compile Include="view\Resource.cs" />
+    <Compile Include="view\Table.cs" />
+    <Compile Include="view\TableBaseTypes.cs" />
     <EmbeddedResource Include="view\Chess.resx">
       <DependentUpon>Chess.cs</DependentUpon>
     </EmbeddedResource>

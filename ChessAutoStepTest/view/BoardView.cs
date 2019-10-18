@@ -5,14 +5,20 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ChessAutoStepTest
 {
-    class ChessView
+    public class BoardView
     {
         PieceView[,] boardPieceViews;
+        Animation anim;
+        Rectangle rect;
+        int cellWidth;
+        int cellHeight;
 
-        public void CreateBoardView(Chessboard chessBoard)
+        Table table;
+        public void CreateBoardView(Control ctrl, Chessboard chessBoard)
         {
             boardPieceViews = new PieceView[chessBoard.XCount, chessBoard.YCount];
 
@@ -29,6 +35,35 @@ namespace ChessAutoStepTest
             }
         }
 
+        public void ResetSize(int width, int height)
+        {
+            int w = height;
+            if (width < height)
+                w = width;
+
+            int xpos = width / 2 - w;
+            int ypos = height / 2 - w;
+
+            rect.X = xpos;
+            rect.Y = ypos;
+            rect.Width = w;
+            rect.Height = w;
+
+            int xCount = boardPieceViews.GetLength(0);
+            int yCount = boardPieceViews.GetLength(1);
+
+            cellWidth = rect.Width / xCount;
+            cellHeight = rect.Height / yCount;
+        }
+
+        public void Draw(Graphics g)
+        {
+            Pen p = new Pen(Color.Black);
+            g.DrawLine(p, 0, 0, 200, 300);
+
+
+        }
+
         PieceView CreatePieceView(PieceType type)
         {
             switch (type)
@@ -43,21 +78,21 @@ namespace ChessAutoStepTest
             return null;
         }
 
-        public void ChessEat(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx)
+        public void Eat(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx)
         {
 
         }
 
 
 
-        public void StartAnim(Color stopColor)
+        public void StartAnim(BoardIdx dstBoardIdx)
         {
-            //scAnim.Stop();
+            anim.Stop();
 
-            //linearR = new ScLinearAnimation(color.R, stopColor.R, scAnim);
-            //linearG = new ScLinearAnimation(color.G, stopColor.G, scAnim);
-            //linearB = new ScLinearAnimation(color.B, stopColor.B, scAnim);
-            //scAnim.Start();
+         //   linearR = new LinearAnimation(color.R, stopColor.R, scAnim);
+         //   linearG = new LinearAnimation(color.G, stopColor.G, scAnim);
+
+            anim.Start();
         }
     }
 }

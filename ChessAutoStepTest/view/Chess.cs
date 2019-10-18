@@ -14,6 +14,7 @@ namespace ChessAutoStepTest
     {
         Chessboard chessboard;
         RecordManager recordMgr;
+        BoardView boardView;
         public Chess()
         {
             InitializeComponent();
@@ -24,6 +25,9 @@ namespace ChessAutoStepTest
 
             chessboard = gameManager.orgChessBoard;
             recordMgr = gameManager.recordMgr;
+
+            boardView = new BoardView();
+            boardView.CreateBoardView( chessboard);
 
             AddRecordToListBox();
         }
@@ -61,13 +65,20 @@ namespace ChessAutoStepTest
             }
         }
 
+        private void chessView_SizeChanged(object sender, EventArgs e)
+        {
+            boardView.ResetSize(chessView.Width, chessView.Height);
+            chessView.Refresh();
+        }
+
         private void chessView_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias; // 消锯齿（可选项）
-            Pen p = new Pen(Color.Black);
-            g.DrawLine(p, 0,0, 200,300);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
+            boardView.Draw(g);
         }
+
+       
     }
 }

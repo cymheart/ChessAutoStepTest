@@ -79,6 +79,7 @@
             this.chessView.Name = "chessView";
             this.chessView.Size = new System.Drawing.Size(531, 391);
             this.chessView.TabIndex = 0;
+            this.chessView.SizeChanged += new System.EventHandler(this.chessView_SizeChanged);
             this.chessView.Paint += new System.Windows.Forms.PaintEventHandler(this.chessView_Paint);
             // 
             // setting
