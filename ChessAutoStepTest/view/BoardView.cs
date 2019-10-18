@@ -52,13 +52,13 @@ namespace ChessAutoStepTest
             table = new Table(rect, xCount + 1, yCount + 1);
 
             TableLine tableLine = new TableLine(LineDir.HORIZONTAL);
-            tableLine.lineComputeMode = LineComputeMode.ABSOLUTE;
-            tableLine.computeParam = 30;
+            tableLine.lineComputeMode = LineComputeMode.PERCENTAGE;
+            tableLine.computeParam = 1 / 17f; 
             table.SetLineArea(xCount, tableLine);
 
             tableLine = new TableLine(LineDir.VERTICAL);
-            tableLine.lineComputeMode = LineComputeMode.ABSOLUTE;
-            tableLine.computeParam = 30;
+            tableLine.lineComputeMode = LineComputeMode.PERCENTAGE;
+            tableLine.computeParam = 1/17;
             table.SetLineArea(0, tableLine);
 
             table.ReLayout();
@@ -68,9 +68,16 @@ namespace ChessAutoStepTest
         {
             Pen p = new Pen(Color.Black);
 
-            for (int i = 0; i < table.colAmount - 1; i++)
+            for (int i = 0; i < table.colAmount ; i++)
             {
                 LinePos line = table.GetColLinePos(i);
+                g.DrawLine(p, table.TransToGlobalPoint(line.start),
+                   table.TransToGlobalPoint(line.end));
+            }
+
+            for (int i = 0; i < table.rowAmount ; i++)
+            {
+                LinePos line = table.GetRowLinePos(i);
                 g.DrawLine(p, table.TransToGlobalPoint(line.start),
                    table.TransToGlobalPoint(line.end));
             }
