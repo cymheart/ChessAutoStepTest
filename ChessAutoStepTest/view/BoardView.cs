@@ -26,20 +26,20 @@ namespace ChessAutoStepTest
                 for (int j = 0; j < chessBoard.YCount; j++)
                 {
                     piece = chessBoard.GetPiece(i, j);
-                    pieceView = CreatePieceView(piece.Type);
-                    boardPieceViews[i, j] = pieceView;
+                  //  pieceView = CreatePieceView(piece.Type);
+                   // boardPieceViews[i, j] = pieceView;
                 }
             }
         }
 
         public void ResetSize(int width, int height)
         {
-            int w = height;
+            int w = height - 10;
             if (width < height)
-                w = width;
+                w = width - 10;
 
-            int xpos = width / 2 - w;
-            int ypos = height / 2 - w;
+            int xpos = width / 2 - w/2;
+            int ypos = height / 2 - w/2;
 
             rect.X = xpos;
             rect.Y = ypos;
@@ -49,16 +49,39 @@ namespace ChessAutoStepTest
             int xCount = boardPieceViews.GetLength(0);
             int yCount = boardPieceViews.GetLength(1);
 
-            table = new Table(rect, xCount, yCount);
+            table = new Table(rect, xCount + 1, yCount + 1);
+
+            TableLine tableLine = new TableLine(LineDir.HORIZONTAL);
+            tableLine.lineComputeMode = LineComputeMode.ABSOLUTE;
+            tableLine.computeParam = 30;
+            table.SetLineArea(xCount, tableLine);
+
+            tableLine = new TableLine(LineDir.VERTICAL);
+            tableLine.lineComputeMode = LineComputeMode.ABSOLUTE;
+            tableLine.computeParam = 30;
+            table.SetLineArea(0, tableLine);
+
+            table.ReLayout();
         }
 
         public void Draw(Graphics g)
         {
             Pen p = new Pen(Color.Black);
 
-            LinePos[] linePos = table.GetRectLinePos(0, 0, 7, 7);
-            for(int i=0; i<linePos.Length; i++)
-                g.DrawLine(p, linePos[i].start, linePos[i].end);
+            for (int i = 0; i < table.colAmount - 1; i++)
+            {
+                LinePos line = table.GetColLinePos(i);
+                g.DrawLine(p, table.TransToGlobalPoint(line.start),
+                   table.TransToGlobalPoint(line.end));
+            }
+
+
+            LinePos[] linePos = table.GetRectLinePos(0, 0, 8, 8);
+            for (int i = 0; i < linePos.Length; i++)
+            {
+                g.DrawLine(p, table.TransToGlobalPoint(linePos[i].start),
+                    table.TransToGlobalPoint( linePos[i].end));
+            }
 
         }
 

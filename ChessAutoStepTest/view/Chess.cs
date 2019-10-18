@@ -28,6 +28,7 @@ namespace ChessAutoStepTest
 
             boardView = new BoardView();
             boardView.CreateBoardView( chessboard);
+            boardView.ResetSize(chessView.Width, chessView.Height);
 
             AddRecordToListBox();
         }
