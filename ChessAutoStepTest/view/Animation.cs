@@ -19,20 +19,20 @@ namespace Anim
         int frameIndex = 0;
         bool isDisposed = false;
 
-        public delegate void AnimationEventHandler(ScAnimation scAnimation);
+        public delegate void AnimationEventHandler(Animation scAnimation);
         public event AnimationEventHandler AnimationEvent;
 
         delegate void UpdateCallback(object obj);
         UpdateCallback updateDet;
 
-        public ScAnimation(Control control, bool autoRest)
+        public Animation(Control control, bool autoRest)
         {
             this.control = control;
             this.autoRest = autoRest;
             updateDet = new UpdateCallback(Update);
         }
 
-        public ScAnimation(Control control, int animMS, bool autoRest)
+        public Animation(Control control, int animMS, bool autoRest)
         {
             this.control = control;
             this.autoRest = autoRest;

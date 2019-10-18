@@ -17,7 +17,13 @@ namespace ChessAutoStepTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            Resource.Create();
+
             Application.Run(new Chess());
         }
+
+
+
     }
 }

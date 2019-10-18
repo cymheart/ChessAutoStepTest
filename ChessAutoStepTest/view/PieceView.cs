@@ -9,8 +9,13 @@ namespace ChessAutoStepTest
 {
     public class PieceView
     {
-        Piece piece;
-        Image img;
+        public Piece piece;
+        public Image img;
+
+        public PieceView(string imgName)
+        {
+            img = Resource.Load(imgName);
+        }
 
         public void Draw(Graphics g, Point pos, int width, int height)
         {

@@ -66,11 +66,12 @@
     <Compile Include="core\Pieces\Rook.cs" />
     <Compile Include="core\Player.cs" />
     <Compile Include="core\GameManager.cs" />
-    <Compile Include="core\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="view\PieceView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="core\Types.cs" />
     <Compile Include="core\Tools.cs" />
+    <Compile Include="view\Resource.cs" />
     <EmbeddedResource Include="view\Chess.resx">
       <DependentUpon>Chess.cs</DependentUpon>
     </EmbeddedResource>
