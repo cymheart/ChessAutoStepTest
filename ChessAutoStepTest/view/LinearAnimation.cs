@@ -27,14 +27,14 @@ namespace Anim
         }
     }
 
-    public class ScLinearAnimation:AnimationEffect
+    public class LinearAnimation:AnimationEffect
     {
         float n = 0;
         Animation scAnim = null;
         float startValue;
         float stopValue;
 
-        public ScLinearAnimation(float startValue, float stopValue, Animation scAnimation)
+        public LinearAnimation(float startValue, float stopValue, Animation scAnimation)
         {
             scAnim = scAnimation;
             this.startValue = startValue;
@@ -52,26 +52,6 @@ namespace Anim
                 isStop = true;
             }
 
-            return val;
-        }
-    }
-
-    public class ScStepAnimation : AnimationEffect
-    {
-        float n = 0;
-        Animation scAnim = null;
-        float startValue;
-
-        public ScStepAnimation(float startValue, float step, Animation scAnimation)
-        {
-            scAnim = scAnimation;
-            this.startValue = startValue;
-            n = step;
-        }
-
-        public override float GetCurtValue()
-        {
-            float val = startValue + scAnim.FrameIndex * n;
             return val;
         }
     }

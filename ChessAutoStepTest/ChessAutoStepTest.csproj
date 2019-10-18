@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="view\AnimationEffect.cs" />
+    <Compile Include="view\LinearAnimation.cs" />
     <Compile Include="view\Animation.cs" />
     <Compile Include="view\Chess.cs">
       <SubType>Form</SubType>
