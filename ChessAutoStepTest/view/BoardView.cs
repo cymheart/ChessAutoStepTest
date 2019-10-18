@@ -14,11 +14,8 @@ namespace ChessAutoStepTest
         PieceView[,] boardPieceViews;
         Animation anim;
         Rectangle rect;
-        int cellWidth;
-        int cellHeight;
-
         Table table;
-        public void CreateBoardView(Control ctrl, Chessboard chessBoard)
+        public void CreateBoardView(Chessboard chessBoard)
         {
             boardPieceViews = new PieceView[chessBoard.XCount, chessBoard.YCount];
 
@@ -52,15 +49,16 @@ namespace ChessAutoStepTest
             int xCount = boardPieceViews.GetLength(0);
             int yCount = boardPieceViews.GetLength(1);
 
-            cellWidth = rect.Width / xCount;
-            cellHeight = rect.Height / yCount;
+            table = new Table(rect, xCount, yCount);
         }
 
         public void Draw(Graphics g)
         {
             Pen p = new Pen(Color.Black);
-            g.DrawLine(p, 0, 0, 200, 300);
 
+            LinePos[] linePos = table.GetRectLinePos(0, 0, 7, 7);
+            for(int i=0; i<linePos.Length; i++)
+                g.DrawLine(p, linePos[i].start, linePos[i].end);
 
         }
 
