@@ -15,6 +15,7 @@ namespace ChessAutoStepTest
         Animation anim;
         Rectangle rect;
         Table table;
+        Table boardTable;
         public void CreateBoardView(Chessboard chessBoard)
         {
             boardPieceViews = new PieceView[chessBoard.XCount, chessBoard.YCount];
@@ -49,17 +50,27 @@ namespace ChessAutoStepTest
             int xCount = boardPieceViews.GetLength(0);
             int yCount = boardPieceViews.GetLength(1);
 
-            table = new Table(rect, xCount + 1, yCount + 1);
-
+            table = new Table(rect, 3, 3);
             TableLine tableLine = new TableLine(LineDir.HORIZONTAL);
             tableLine.lineComputeMode = LineComputeMode.PERCENTAGE;
-            tableLine.computeParam = 1 / 17f; 
-            table.SetLineArea(xCount, tableLine);
+            tableLine.computeParam = 1 / 17f;
+            table.SetLineArea(2, tableLine);
+            tableLine.computeParam = 1 / 17f;
+            table.SetLineArea(0, tableLine);
+            tableLine.computeParam = 15 / 17f;
+            table.SetLineArea(1, tableLine);
 
             tableLine = new TableLine(LineDir.VERTICAL);
             tableLine.lineComputeMode = LineComputeMode.PERCENTAGE;
-            tableLine.computeParam = 1/17;
+            tableLine.computeParam = 1 / 17f;
             table.SetLineArea(0, tableLine);
+            tableLine.computeParam = 1 / 17f;
+            table.SetLineArea(2, tableLine);
+            tableLine.computeParam = 15 / 17f;
+            table.SetLineArea(1, tableLine);
+
+             boardTable = new Table(xCount, yCount);
+             table.AddCellChildTable(1, 1, boardTable);
 
             table.ReLayout();
         }
@@ -68,14 +79,14 @@ namespace ChessAutoStepTest
         {
             Pen p = new Pen(Color.Black);
 
-            for (int i = 0; i < table.colAmount ; i++)
+            for (int i = 0; i < table.colAmount; i++)
             {
                 LinePos line = table.GetColLinePos(i);
                 g.DrawLine(p, table.TransToGlobalPoint(line.start),
                    table.TransToGlobalPoint(line.end));
             }
 
-            for (int i = 0; i < table.rowAmount ; i++)
+            for (int i = 0; i < table.rowAmount; i++)
             {
                 LinePos line = table.GetRowLinePos(i);
                 g.DrawLine(p, table.TransToGlobalPoint(line.start),
@@ -83,11 +94,51 @@ namespace ChessAutoStepTest
             }
 
 
-            LinePos[] linePos = table.GetRectLinePos(0, 0, 8, 8);
+
+            //Brush brush;
+            //for(int i = 1; i< table.rowAmount; i++)
+            //{
+            //    if (i % 2 == 0)
+            //        brush = Brushes.Black;
+            //    else
+            //        brush = Brushes.White;
+
+            //    for(int j = 0; j<table.colAmount - 1; j++)
+            //    {
+            //       RectangleF rect = table.GetCellContentGlobalRect(j,i);
+            //        g.FillRectangle(brush, rect);
+            //    }
+            //}
+
+
+
+
+            LinePos[] linePos = table.GetRectLinePos(0, 0, 2, 2);
             for (int i = 0; i < linePos.Length; i++)
             {
                 g.DrawLine(p, table.TransToGlobalPoint(linePos[i].start),
                     table.TransToGlobalPoint( linePos[i].end));
+            }
+
+
+            Table table2 = table.GetCellChildTable(1, 1);
+            RectangleF rect = table2.GetTableRect();
+            rect = table2.TransToGlobalRect(rect);
+          //  g.FillRectangle(Brushes.Black, rect);
+
+
+            Brush brush = Brushes.Black ;
+            for (int i = 0; i < table2.rowAmount; i++)
+            {
+                if (i % 2 == 0)
+                    brush = Brushes.White;
+
+                for (int j = 0; j < table2.colAmount; j++)
+                {
+                    rect = table2.GetCellContentGlobalRect(j, i);
+                    Rectangle r = new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+                    g.DrawRectangle(Pens.Black, r);
+                }
             }
 
         }
