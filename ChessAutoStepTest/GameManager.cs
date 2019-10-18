@@ -162,11 +162,11 @@ namespace ChessAutoStepTest
         /// <param name="beEatBoardIdx"></param>
         void CancelEat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx)
         {
+            AppendRecord(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
+
             int nextPlayerIdx = GetNextPlayerIdx();
             player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
-            players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);
-
-            AppendRecord(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
+            players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);     
         }
 
 
@@ -178,8 +178,9 @@ namespace ChessAutoStepTest
         /// <param name="dstBoardIdx"></param>
         void Move(Player player, BoardIdx moveBoardIdx, BoardIdx dstBoardIdx)
         {
-            player.EatOrMoveBoardPiece(moveBoardIdx, dstBoardIdx);
             AppendRecord(moveBoardIdx, dstBoardIdx, ChessCmdType.Move);
+
+            player.EatOrMoveBoardPiece(moveBoardIdx, dstBoardIdx);       
         }
 
         /// <summary>
@@ -190,9 +191,7 @@ namespace ChessAutoStepTest
         /// <param name="type"></param>
         void AppendRecord(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx, ChessCmdType type)
         {
-            Piece orgPiece = chessBoard.GetPiece(orgBoardIdx);
-            Piece dstPiece = chessBoard.GetPiece(dstBoardIdx);
-            Record record = new Record(orgBoardIdx, dstBoardIdx, orgPiece, dstPiece, type);
+            Record record = new Record(chessBoard, orgBoardIdx, dstBoardIdx, type);
             recordList.Push(record);
         }
 

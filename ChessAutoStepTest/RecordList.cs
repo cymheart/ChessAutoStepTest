@@ -14,6 +14,7 @@ namespace ChessAutoStepTest
     {
         public LinkedList<Record> recordList = new LinkedList<Record>();
 
+
         public void Push(Record record)
         {
             recordList.AddLast(record);
@@ -35,17 +36,21 @@ namespace ChessAutoStepTest
         public Piece orgPiece;
         public Piece dstPiece;
         public bool orgPieceIsFirstMove;
+        public BoardIdx lastActionPieceAtBoardIdx;
+        public BoardIdx lastActionPieceAtPrevBoardIdx;
 
-        public Record(
-            BoardIdx orgBoardIdx, BoardIdx dstBoardIdx,
-            Piece orgPiece,Piece dstPiece,ChessCmdType type)
+        public Record(Chessboard chessBoard,BoardIdx orgBoardIdx, BoardIdx dstBoardIdx,ChessCmdType type)
         {
             this.type = type;
             this.orgBoardIdx = orgBoardIdx;
             this.dstBoardIdx = dstBoardIdx;
-            this.orgPiece = orgPiece;
-            this.dstPiece = dstPiece;
+
+            orgPiece = chessBoard.GetPiece(orgBoardIdx);
+            dstPiece = chessBoard.GetPiece(dstBoardIdx);
             orgPieceIsFirstMove = orgPiece.IsFirstMove;
+
+            lastActionPieceAtBoardIdx = chessBoard.LastActionPieceAtBoardIdx;
+            lastActionPieceAtPrevBoardIdx = chessBoard.LastActionPieceAtPrevBoardIdx;
         }
     }
 
