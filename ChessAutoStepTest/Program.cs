@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,7 +17,18 @@ namespace ChessAutoStepTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Chess());
+
+            GameManager gameManager = new GameManager();
+
+            for (int i = 0; i < 5; i++)
+            {             
+                gameManager.CreateGame();
+                gameManager.Play();
+                Thread.Sleep(200);
+            }
+
+
+            // Application.Run(new Chess());
         }
     }
 }
