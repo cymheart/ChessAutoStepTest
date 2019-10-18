@@ -67,6 +67,11 @@ namespace ChessAutoStepTest
             return boardPieces[boardIdx.x, boardIdx.y];
         }
 
+        public Piece GetPiece(int x, int y)
+        {
+            return boardPieces[x, y];
+        }
+
         public Piece GetLastActionPiece()
         {
             if (LastActionPieceAtBoardIdx.x == -1 || LastActionPieceAtBoardIdx.y == -1)
