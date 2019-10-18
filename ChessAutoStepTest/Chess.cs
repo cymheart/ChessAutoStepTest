@@ -30,6 +30,8 @@ namespace ChessAutoStepTest
 
         void AddRecordToListBox()
         {
+            listBoxRecord.Items.Clear();
+
             Record record;
             LinkedListNode<Record> node = recordMgr.recordList.First;
             for (; node != null; node = node.Next)
@@ -46,13 +48,13 @@ namespace ChessAutoStepTest
                 {
                     case ChessRecordType.Eat:
                         {
-                            listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "吃" + dstPiece.Desc + dstIdxMsg);
+                            listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "吃" + dstPiece.Desc + dstIdxMsg + "   " + record.tips );
                         }
                         break;
 
                     case ChessRecordType.Move:
                         {
-                            listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "走到" + dstIdxMsg);
+                            listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "走到" + dstIdxMsg + "   " + record.tips);
                         }
                         break;
                 }

@@ -118,13 +118,13 @@ namespace ChessAutoStepTest
         /// <param name="player">当前吃子玩家</param>
         /// <param name="eatBoardIdx"></param>
         /// <param name="beEatBoardIdx"></param>
-        void Eat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx)
+        void Eat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx, string tips = null)
         {
             int nextPlayerIdx = GetNextPlayerIdx();
 
             recordMgr.AppendRecord(
                 curtPlayPlayerIdx, nextPlayerIdx, 
-                eatBoardIdx, beEatBoardIdx, ChessRecordType.Eat);
+                eatBoardIdx, beEatBoardIdx, tips, ChessRecordType.Eat);
 
             player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
             players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);
@@ -136,12 +136,12 @@ namespace ChessAutoStepTest
         /// <param name="player">当前移子玩家</param>
         /// <param name="moveBoardIdx"></param>
         /// <param name="dstBoardIdx"></param>
-        void Move(Player player, BoardIdx moveBoardIdx, BoardIdx dstBoardIdx)
+        void Move(Player player, BoardIdx moveBoardIdx, BoardIdx dstBoardIdx, string tips = null)
         {
             int nextPlayerIdx = GetNextPlayerIdx();
 
            recordMgr.AppendRecord(curtPlayPlayerIdx, nextPlayerIdx,
-                moveBoardIdx, dstBoardIdx, ChessRecordType.Move);
+                moveBoardIdx, dstBoardIdx, tips, ChessRecordType.Move);
 
             player.EatOrMoveBoardPiece(moveBoardIdx, dstBoardIdx);       
         }
@@ -159,7 +159,7 @@ namespace ChessAutoStepTest
             BoardIdx? canEatKingBoardIdx = player.GetCanEatBoardIdx(kingBoardIdx[0]);
             if(canEatKingBoardIdx != null)
             {
-                Eat(player, canEatKingBoardIdx.Value, kingBoardIdx[0]);
+                Eat(player, canEatKingBoardIdx.Value, kingBoardIdx[0], "(策略:优先吃对方的王)");
                 return;
             }
 
@@ -176,22 +176,22 @@ namespace ChessAutoStepTest
                 {
                     for (int i = 0; i < eatPos.Length; i++)
                     {
-                        Eat(player, kingBoardIdx[0], eatPos[i]);
-                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(eatPos[i], "test");
+                        Eat(player, kingBoardIdx[0], eatPos[i], "(策略:王下回合被吃的情况下，优先移动王吃子)");
+                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(eatPos[i]);
                         if (canEatKingBoardIdx == null)
                         {
                             return;
                         }
                         else
-                        {                 
-                            recordMgr.CancelRecord();
+                        {
+                             recordMgr.CancelRecord();
                         }
                     }
 
                     for (int i = 0; i < movePos.Length; i++)
                     {
-                        Move(player, kingBoardIdx[0], movePos[i]);
-                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(movePos[i], "test");
+                        Move(player, kingBoardIdx[0], movePos[i], "(策略:王下回合被吃的情况下，优先移动王)");
+                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(movePos[i]);
                         if (canEatKingBoardIdx == null)
                         {
                             return;
@@ -215,7 +215,7 @@ namespace ChessAutoStepTest
                 int eatIdx = ra.Next(0, canEatBoardIdxs.Length - 1);
                 BoardIdx eatBoardIdx = canEatBoardIdxs[eatIdx];
 
-                Eat(player, boardIdx.Value, eatBoardIdx);
+                Eat(player, boardIdx.Value, eatBoardIdx, "(策略:优先吃子)");
             }
             else
             { 
@@ -227,7 +227,7 @@ namespace ChessAutoStepTest
                 int moveIdx = ra.Next(0, canMoveBoardIdxs.Length - 1);
                 BoardIdx moveBoardIdx = canMoveBoardIdxs[moveIdx];
 
-                Move(player, boardIdx.Value, moveBoardIdx);
+                Move(player, boardIdx.Value, moveBoardIdx, "(策略:没有吃的情况下，随机移动棋子)");
             }
         }
 

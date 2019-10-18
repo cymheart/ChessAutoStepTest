@@ -11,6 +11,7 @@ namespace ChessAutoStepTest
     {
         LinkedList<int> chessBoardPiecePos = new LinkedList<int>();
         Chessboard chessBoard;
+        int m = 0;
 
         public Player(Chessboard board)
         {
@@ -21,13 +22,29 @@ namespace ChessAutoStepTest
         {
             int key = GetPieceKeyForBoardIdx(boardX, boardY);
 
-            if(chessBoardPiecePos.Contains(key))
+            if (key == 4102)
+            {
+                m--;
+            }
+
+            if (chessBoardPiecePos.Contains(key))
                 chessBoardPiecePos.Remove(key);
         }
 
         public void AddBoardPieceRef(int boardX, int boardY)
         {
             int key = GetPieceKeyForBoardIdx(boardX, boardY);
+            if(key == 4102)
+            {
+                m++;
+
+                if(m == 2)
+                {
+                    int b;
+                    b = 3;
+                }
+            }
+
             chessBoardPiecePos.AddLast(key);
         }
 
@@ -58,9 +75,9 @@ namespace ChessAutoStepTest
             return boardIdxList.ToArray();
         }
 
-        public BoardIdx? GetCanEatBoardIdx(BoardIdx beEatBoardIdx, string msg = null)
+        public BoardIdx? GetCanEatBoardIdx(BoardIdx beEatBoardIdx)
         {
-            BoardIdx[] boardIdxes = GetCanEatBoardIdxs(msg);
+            BoardIdx[] boardIdxes = GetCanEatBoardIdxs();
             if (boardIdxes == null)
                 return null;
 
@@ -84,7 +101,7 @@ namespace ChessAutoStepTest
         }
 
 
-        public BoardIdx[] GetCanEatBoardIdxs(string msg = null)
+        public BoardIdx[] GetCanEatBoardIdxs()
         {
             BoardIdx[] boardIdxs = GetAllPieceBoardIdx();
 

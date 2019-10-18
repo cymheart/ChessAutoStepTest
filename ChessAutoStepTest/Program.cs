@@ -17,18 +17,7 @@ namespace ChessAutoStepTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            GameManager gameManager = new GameManager();
-
-            for (int i = 0; i < 5; i++)
-            {             
-                gameManager.CreateGame();
-                gameManager.Play();
-                Thread.Sleep(200);
-            }
-
-
-            // Application.Run(new Chess());
+            Application.Run(new Chess());
         }
     }
 }

@@ -26,11 +26,12 @@ namespace ChessAutoStepTest
         public void AppendRecord( 
             int orgPlayerIdx, int dstPlayerIdx,
             BoardIdx orgBoardIdx, BoardIdx dstBoardIdx,
+            string tips,
             ChessRecordType type)
         {
             Record record = new Record( 
                 gameMgr.chessBoard, orgPlayerIdx, dstPlayerIdx,
-                orgBoardIdx, dstBoardIdx, type);
+                orgBoardIdx, dstBoardIdx, tips, type);
 
             Push(record);
         }
@@ -87,23 +88,21 @@ namespace ChessAutoStepTest
         public BoardIdx lastActionPieceAtPrevBoardIdx;
         public int orgPlayerIdx;
         public int dstPlayerIdx;
+        public string tips;
 
         public Record(
             Chessboard chessBoard, int orgPlayerIdx, int dstPlayerIdx,
-            BoardIdx orgBoardIdx, BoardIdx dstBoardIdx, ChessRecordType type)
+            BoardIdx orgBoardIdx, BoardIdx dstBoardIdx, string tips, ChessRecordType type)
         {
+            this.tips = tips;
             this.type = type;
             this.orgBoardIdx = orgBoardIdx;
             this.dstBoardIdx = dstBoardIdx;
+            this.orgPlayerIdx = orgPlayerIdx;
+            this.dstPlayerIdx = dstPlayerIdx;
 
             orgPiece = chessBoard.GetPiece(orgBoardIdx);
             dstPiece = chessBoard.GetPiece(dstBoardIdx);
-
-            if(dstPiece == null && type == ChessRecordType.Eat)
-            {
-                int a;
-                a = 3;
-            }
 
             orgPieceIsFirstMove = orgPiece.IsFirstMove;
 
