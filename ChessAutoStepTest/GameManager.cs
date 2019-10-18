@@ -19,17 +19,12 @@ namespace ChessAutoStepTest
         /// <summary>
         /// 走棋记录存储
         /// </summary>
-        public CmdList cmdList = new CmdList();
+        public RecordList recordList = new RecordList();
 
         public int ChessBoardXCount = 8;
         public int ChessBoardYCount = 8;
         bool IsRandomPiecesPos = false;
         bool IsRandomPiecesCount = false;
-
-        /// <summary>
-        /// 关闭添加到走棋命令记录
-        /// </summary>
-        bool IsCloseCmdList = false;
 
         int firstPlayPlayerIdx = 0;
         ChessColor[] playerPieceColor = { ChessColor.White, ChessColor.Black};
@@ -81,8 +76,6 @@ namespace ChessAutoStepTest
             _cacheChessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(chessBoard);
             _cachePlayers[0] = Tools.Instance.DeepCopyByBinary<Player>(players[0]);
             _cachePlayers[1] = Tools.Instance.DeepCopyByBinary<Player>(players[1]);
-            _IsCloseCmdList = IsCloseCmdList;
-            IsCloseCmdList = true;
         }
 
 
@@ -94,7 +87,6 @@ namespace ChessAutoStepTest
             chessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(_cacheChessBoard);
             players[0] = Tools.Instance.DeepCopyByBinary<Player>(_cachePlayers[0]);
             players[1] = Tools.Instance.DeepCopyByBinary<Player>(_cachePlayers[1]);
-            IsCloseCmdList = _IsCloseCmdList;
         }
 
 
@@ -147,7 +139,7 @@ namespace ChessAutoStepTest
         }
 
         /// <summary>
-        /// 吃棋子
+        /// 吃子
         /// </summary>
         /// <param name="player">当前吃子玩家</param>
         /// <param name="eatBoardIdx"></param>
@@ -158,7 +150,23 @@ namespace ChessAutoStepTest
             player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
             players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);
 
-            AppendCmd(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
+            AppendRecord(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
+
+        }
+
+        /// <summary>
+        /// 撤销吃子
+        /// </summary>
+        /// <param name="player">当前吃子玩家</param>
+        /// <param name="eatBoardIdx"></param>
+        /// <param name="beEatBoardIdx"></param>
+        void CancelEat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx)
+        {
+            int nextPlayerIdx = GetNextPlayerIdx();
+            player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
+            players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);
+
+            AppendRecord(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
         }
 
 
@@ -171,7 +179,7 @@ namespace ChessAutoStepTest
         void Move(Player player, BoardIdx moveBoardIdx, BoardIdx dstBoardIdx)
         {
             player.EatOrMoveBoardPiece(moveBoardIdx, dstBoardIdx);
-            AppendCmd(moveBoardIdx, dstBoardIdx, ChessCmdType.Move);
+            AppendRecord(moveBoardIdx, dstBoardIdx, ChessCmdType.Move);
         }
 
         /// <summary>
@@ -180,13 +188,12 @@ namespace ChessAutoStepTest
         /// <param name="orgBoardIdx"></param>
         /// <param name="dstBoardIdx"></param>
         /// <param name="type"></param>
-        void AppendCmd(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx, ChessCmdType type)
+        void AppendRecord(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx, ChessCmdType type)
         {
-            if (!IsCloseCmdList)
-            {
-                Cmd cmd = new Cmd(orgBoardIdx, dstBoardIdx, type);
-                cmdList.Add(cmd);
-            }
+            Piece orgPiece = chessBoard.GetPiece(orgBoardIdx);
+            Piece dstPiece = chessBoard.GetPiece(dstBoardIdx);
+            Record record = new Record(orgBoardIdx, dstBoardIdx, orgPiece, dstPiece, type);
+            recordList.Push(record);
         }
 
 
@@ -226,8 +233,6 @@ namespace ChessAutoStepTest
                         canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(eatPos[i]);
                         if (canEatKingBoardIdx == null)
                         {
-                            IsCloseCmdList = _IsCloseCmdList;
-                            AppendCmd(kingBoardIdx[0], eatPos[i], ChessCmdType.Eat);
                             return;
                         }
                         else
@@ -242,8 +247,6 @@ namespace ChessAutoStepTest
                         canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(movePos[i]);
                         if (canEatKingBoardIdx == null)
                         {
-                            IsCloseCmdList = _IsCloseCmdList;
-                            AppendCmd(kingBoardIdx[0], movePos[i], ChessCmdType.Move);
                             return;
                         }
                         else
