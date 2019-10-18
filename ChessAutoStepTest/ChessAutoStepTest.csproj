@@ -52,7 +52,7 @@
     <Compile Include="Chess.Designer.cs">
       <DependentUpon>Chess.cs</DependentUpon>
     </Compile>
-    <Compile Include="Chessboard.cs" />
+    <Compile Include="core\Chessboard.cs" />
     <Compile Include="core\RecordManager.cs" />
     <Compile Include="core\Pieces\Bishop.cs" />
     <Compile Include="core\Pieces\King.cs" />
