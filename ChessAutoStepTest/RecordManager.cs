@@ -98,6 +98,13 @@ namespace ChessAutoStepTest
 
             orgPiece = chessBoard.GetPiece(orgBoardIdx);
             dstPiece = chessBoard.GetPiece(dstBoardIdx);
+
+            if(dstPiece == null && type == ChessRecordType.Eat)
+            {
+                int a;
+                a = 3;
+            }
+
             orgPieceIsFirstMove = orgPiece.IsFirstMove;
 
             lastActionPieceAtBoardIdx = chessBoard.LastActionPieceAtBoardIdx;

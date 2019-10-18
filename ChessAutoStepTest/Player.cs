@@ -58,9 +58,9 @@ namespace ChessAutoStepTest
             return boardIdxList.ToArray();
         }
 
-        public BoardIdx? GetCanEatBoardIdx(BoardIdx beEatBoardIdx)
+        public BoardIdx? GetCanEatBoardIdx(BoardIdx beEatBoardIdx, string msg = null)
         {
-            BoardIdx[] boardIdxes = GetCanEatBoardIdxs();
+            BoardIdx[] boardIdxes = GetCanEatBoardIdxs(msg);
             if (boardIdxes == null)
                 return null;
 
@@ -84,7 +84,7 @@ namespace ChessAutoStepTest
         }
 
 
-        public BoardIdx[] GetCanEatBoardIdxs()
+        public BoardIdx[] GetCanEatBoardIdxs(string msg = null)
         {
             BoardIdx[] boardIdxs = GetAllPieceBoardIdx();
 

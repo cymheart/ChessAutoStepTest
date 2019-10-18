@@ -177,21 +177,21 @@ namespace ChessAutoStepTest
                     for (int i = 0; i < eatPos.Length; i++)
                     {
                         Eat(player, kingBoardIdx[0], eatPos[i]);
-                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(eatPos[i]);
+                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(eatPos[i], "test");
                         if (canEatKingBoardIdx == null)
                         {
                             return;
                         }
                         else
-                        {
-                           recordMgr.CancelRecord();
+                        {                 
+                            recordMgr.CancelRecord();
                         }
                     }
 
                     for (int i = 0; i < movePos.Length; i++)
                     {
                         Move(player, kingBoardIdx[0], movePos[i]);
-                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(movePos[i]);
+                        canEatKingBoardIdx = players[nextPlayerIdx].GetCanEatBoardIdx(movePos[i], "test");
                         if (canEatKingBoardIdx == null)
                         {
                             return;
