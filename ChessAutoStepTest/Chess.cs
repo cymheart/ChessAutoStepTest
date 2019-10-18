@@ -44,13 +44,13 @@ namespace ChessAutoStepTest
 
                 switch (record.type)
                 {
-                    case ChessCmdType.Eat:
+                    case ChessRecordType.Eat:
                         {
                             listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "吃" + dstPiece.Desc + dstIdxMsg);
                         }
                         break;
 
-                    case ChessCmdType.Move:
+                    case ChessRecordType.Move:
                         {
                             listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "走到" + dstIdxMsg);
                         }

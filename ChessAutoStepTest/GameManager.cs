@@ -44,7 +44,7 @@ namespace ChessAutoStepTest
 
         public void CreateGame()
         {
-            RecordManager recordMgr = new RecordManager(this);
+            recordMgr = new RecordManager(this);
 
             chessBoard = new Chessboard();
             chessBoard.XCount = ChessBoardXCount;

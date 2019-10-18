@@ -13,15 +13,11 @@ namespace ChessAutoStepTest
     public class RecordManager
     {
         GameManager gameMgr;
-        Chessboard chessBoard;
-        Player[] players;
         public LinkedList<Record> recordList = new LinkedList<Record>();
 
         public RecordManager(GameManager gameMgr)
         {
             this.gameMgr = gameMgr;
-            chessBoard = gameMgr.chessBoard;
-            players = gameMgr.players;
         }
 
         /// <summary>
@@ -32,8 +28,8 @@ namespace ChessAutoStepTest
             BoardIdx orgBoardIdx, BoardIdx dstBoardIdx,
             ChessRecordType type)
         {
-            Record record = new Record(
-                chessBoard, orgPlayerIdx, dstPlayerIdx,
+            Record record = new Record( 
+                gameMgr.chessBoard, orgPlayerIdx, dstPlayerIdx,
                 orgBoardIdx, dstBoardIdx, type);
 
             Push(record);
@@ -44,6 +40,9 @@ namespace ChessAutoStepTest
         /// </summary>
         public void CancelRecord()
         {
+            Player[] players = gameMgr.players;
+            Chessboard chessBoard = gameMgr.chessBoard;
+
             Record record = Pop();
             record.orgPiece.IsFirstMove = record.orgPieceIsFirstMove;
 
