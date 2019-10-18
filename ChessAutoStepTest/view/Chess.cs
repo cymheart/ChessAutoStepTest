@@ -1,4 +1,7 @@
-﻿using System;
+﻿//面试试题测试: by蔡业民 开始于 2019/10/17 
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +15,7 @@ namespace ChessAutoStepTest
 {
     public partial class Chess : Form
     {
+        GameManager gameManager;
         Chessboard chessboard;
         RecordManager recordMgr;
         BoardView boardView;
@@ -19,7 +23,7 @@ namespace ChessAutoStepTest
         {
             InitializeComponent();
 
-            GameManager gameManager = new GameManager();
+            gameManager = new GameManager();
             gameManager.CreateGame();
             gameManager.Play();
 
@@ -36,11 +40,12 @@ namespace ChessAutoStepTest
         void AddRecordToListBox()
         {
             listBoxRecord.Items.Clear();
-
+            int i = 0;
             Record record;
             LinkedListNode<Record> node = recordMgr.recordList.First;
             for (; node != null; node = node.Next)
             {
+                i++;
                 record = node.Value;
                 Piece orgPiece = chessboard.GetPiece(record.orgBoardIdx);
                 Piece dstPiece = chessboard.GetPiece(record.dstBoardIdx);
@@ -53,17 +58,29 @@ namespace ChessAutoStepTest
                 {
                     case ChessRecordType.Eat:
                         {
-                            listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "吃" + dstPiece.Desc + dstIdxMsg + "   " + record.tips );
+                            listBoxRecord.Items.Add( i + ". " + orgPiece.Desc + orgIdxMsg + "吃" + dstPiece.Desc + dstIdxMsg + "   " + record.tips );
                         }
                         break;
 
                     case ChessRecordType.Move:
                         {
-                            listBoxRecord.Items.Add(orgPiece.Desc + orgIdxMsg + "走到" + dstIdxMsg + "   " + record.tips);
+                            listBoxRecord.Items.Add(i + ". " + orgPiece.Desc + orgIdxMsg + "走到" + dstIdxMsg + "   " + record.tips);
                         }
                         break;
                 }
             }
+
+            string resultMsg = "平局";
+
+            if (gameManager.winPlayerIdx >= 0) {
+                ChessColor winColor = gameManager.playerPieceColor[gameManager.winPlayerIdx];
+                if (winColor == ChessColor.White)
+                    resultMsg = "白子胜";
+                else
+                    resultMsg = "黑子胜";
+            }
+
+            listBoxRecord.Items.Add(resultMsg);
         }
 
         private void chessView_SizeChanged(object sender, EventArgs e)

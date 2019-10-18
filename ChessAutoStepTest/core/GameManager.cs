@@ -1,4 +1,7 @@
-﻿using System;
+﻿//面试试题测试: by蔡业民 开始于 2019/10/17 
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,13 +24,23 @@ namespace ChessAutoStepTest
         /// </summary>
         public RecordManager recordMgr;
 
+      
+
         public int ChessBoardXCount = 8;
         public int ChessBoardYCount = 8;
+
+        /// <summary>
+        ///注意: 是否随机棋子初始位置,这个设置为true,
+        ///可能导致开时时，王就在对方棋子旁边，而至使出现只有1轮就结束了
+        /// </summary>
         bool IsRandomPiecesPos = false;
+
+
         bool IsRandomPiecesCount = false;
 
         int firstPlayPlayerIdx = 0;
-        ChessColor[] playerPieceColor = { ChessColor.White, ChessColor.Black};
+        public ChessColor[] playerPieceColor = { ChessColor.White, ChessColor.Black};
+        public int winPlayerIdx = -1;
         int playerCount = 2;
         int curtPlayPlayerIdx;
 
@@ -69,6 +82,7 @@ namespace ChessAutoStepTest
         /// </summary>
         public int Play()
         {
+            int result = 0;
             for (int i = 0; i < turnCount; i++)
             {
                 TurnToNextPlayer();
@@ -77,16 +91,31 @@ namespace ChessAutoStepTest
                 int nextPlayerIdx = GetNextPlayerIdx();
                 BoardIdx[] kingBoardIdx = players[nextPlayerIdx].GetPieceBoardIdxsByType(PieceType.King);
                 if (kingBoardIdx == null)
-                    return 1;
+                {
+                    result = 1;
+                    break;
+                }
 
                 TurnToNextPlayer();
                 AIPlay(players[curtPlayPlayerIdx]);
                 nextPlayerIdx = GetNextPlayerIdx();
                 kingBoardIdx = players[nextPlayerIdx].GetPieceBoardIdxsByType(PieceType.King);
                 if (kingBoardIdx == null)
-                    return 1;
-
+                {
+                    result = 1;
+                    break;
+                }
             }
+
+            if(result == 1)
+            {
+                winPlayerIdx = curtPlayPlayerIdx;
+            }
+            else
+            {
+                winPlayerIdx = -1;
+            }
+
 
             return 0;
         }

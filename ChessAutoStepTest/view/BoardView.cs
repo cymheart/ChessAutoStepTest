@@ -1,4 +1,7 @@
-﻿using Anim;
+﻿//面试试题测试: by蔡业民 开始于 2019/10/17 
+
+
+using Anim;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,6 +19,8 @@ namespace ChessAutoStepTest
         Rectangle rect;
         Table table;
         Table boardTable;
+        Table leftLanTable;
+        Table bottomLanTable;
         public void CreateBoardView(Chessboard chessBoard)
         {
             boardPieceViews = new PieceView[chessBoard.XCount, chessBoard.YCount];
@@ -71,6 +76,13 @@ namespace ChessAutoStepTest
 
              boardTable = new Table(xCount, yCount);
              table.AddCellChildTable(1, 1, boardTable);
+
+
+            //leftLanTable = new Table(8, 1);
+            //table.AddCellChildTable(1, 0, boardTable);
+
+            //bottomLanTable = new Table(1, 8);
+            //table.AddCellChildTable(2, 1, boardTable);
 
             table.ReLayout();
         }
@@ -140,6 +152,7 @@ namespace ChessAutoStepTest
                     g.DrawRectangle(Pens.Black, r);
                 }
             }
+
 
         }
 
