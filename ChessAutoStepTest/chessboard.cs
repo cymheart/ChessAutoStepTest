@@ -39,6 +39,10 @@ namespace ChessAutoStepTest
             AppendPiece(piece, dstBoardIdx.x, dstBoardIdx.y);
         }
 
+        public void AppendPiece(Piece piece, BoardIdx boardIdx)
+        {
+            AppendPiece(piece, boardIdx.x, boardIdx.y);
+        }
 
         public void AppendPiece(Piece piece, int x, int y)
         {

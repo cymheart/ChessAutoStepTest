@@ -13,7 +13,7 @@ namespace ChessAutoStepTest
     public partial class Chess : Form
     {
         Chessboard chessboard;
-        CmdList cmdList;
+        RecordManager recordMgr;
         public Chess()
         {
             InitializeComponent();
@@ -23,26 +23,26 @@ namespace ChessAutoStepTest
             gameManager.Play();
 
             chessboard = gameManager.orgChessBoard;
-            cmdList = gameManager.cmdList;
+            recordMgr = gameManager.recordMgr;
 
             AddRecordToListBox();
         }
 
         void AddRecordToListBox()
         {
-            Cmd cmd;
-            LinkedListNode<Cmd> node = cmdList.cmdList.First;
+            Record record;
+            LinkedListNode<Record> node = recordMgr.recordList.First;
             for (; node != null; node = node.Next)
             {
-                cmd = node.Value;
-                Piece orgPiece = chessboard.GetPiece(cmd.orgBoardIdx);
-                Piece dstPiece = chessboard.GetPiece(cmd.dstBoardIdx);
-                chessboard.MovePiece(cmd.orgBoardIdx, cmd.dstBoardIdx);
+                record = node.Value;
+                Piece orgPiece = chessboard.GetPiece(record.orgBoardIdx);
+                Piece dstPiece = chessboard.GetPiece(record.dstBoardIdx);
+                chessboard.MovePiece(record.orgBoardIdx, record.dstBoardIdx);
 
-                string orgIdxMsg = "(" + cmd.orgBoardIdx.x + "," + cmd.orgBoardIdx.y + ")";
-                string dstIdxMsg = "(" + cmd.dstBoardIdx.x + "," + cmd.dstBoardIdx.y + ")";
+                string orgIdxMsg = "(" + record.orgBoardIdx.x + "," + record.orgBoardIdx.y + ")";
+                string dstIdxMsg = "(" + record.dstBoardIdx.x + "," + record.dstBoardIdx.y + ")";
 
-                switch (cmd.type)
+                switch (record.type)
                 {
                     case ChessCmdType.Eat:
                         {

@@ -85,7 +85,7 @@ namespace ChessAutoStepTest
     }
 
 
-    public enum ChessCmdType
+    public enum ChessRecordType
     {
         /// <summary>
         /// 吃命令

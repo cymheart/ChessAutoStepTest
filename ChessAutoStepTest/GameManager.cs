@@ -8,8 +8,8 @@ namespace ChessAutoStepTest
 {
     public class GameManager
     {
-        Player[] players;
-        Chessboard chessBoard;
+        public Player[] players;
+        public Chessboard chessBoard;
 
         /// <summary>
         /// 初始棋盘数据
@@ -19,7 +19,7 @@ namespace ChessAutoStepTest
         /// <summary>
         /// 走棋记录存储
         /// </summary>
-        public RecordList recordList = new RecordList();
+        public RecordManager recordMgr;
 
         public int ChessBoardXCount = 8;
         public int ChessBoardYCount = 8;
@@ -33,10 +33,6 @@ namespace ChessAutoStepTest
 
         int turnCount = 100;
 
-        Player[] _cachePlayers;
-        Chessboard _cacheChessBoard;
-        bool _IsCloseCmdList;
-
         List<int> allPiecesIdx = new List<int>();
         List<int> pawn0Idx = new List<int>();
         List<int> pawn1Idx = new List<int>();
@@ -44,11 +40,12 @@ namespace ChessAutoStepTest
 
         public GameManager()
         {
-
         }
 
         public void CreateGame()
         {
+            RecordManager recordMgr = new RecordManager(this);
+
             chessBoard = new Chessboard();
             chessBoard.XCount = ChessBoardXCount;
             chessBoard.YCount = ChessBoardYCount;
@@ -60,35 +57,12 @@ namespace ChessAutoStepTest
                 new Player(chessBoard)
            };
 
-            _cachePlayers = new Player[2] { null, null };
 
             curtPlayPlayerIdx = -1;
             CreateRandomIdxTable();          
             CreatePlayersBoardPieces();
             orgChessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(chessBoard);
         }
-
-        /// <summary>
-        /// 缓存当前游戏数据
-        /// </summary>
-        void CacheGameData()
-        {
-            _cacheChessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(chessBoard);
-            _cachePlayers[0] = Tools.Instance.DeepCopyByBinary<Player>(players[0]);
-            _cachePlayers[1] = Tools.Instance.DeepCopyByBinary<Player>(players[1]);
-        }
-
-
-        /// <summary>
-        /// 恢复先前缓存的游戏数据
-        /// </summary>
-        void RecoverGameData()
-        {
-            chessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(_cacheChessBoard);
-            players[0] = Tools.Instance.DeepCopyByBinary<Player>(_cachePlayers[0]);
-            players[1] = Tools.Instance.DeepCopyByBinary<Player>(_cachePlayers[1]);
-        }
-
 
         /// <summary>
         /// 
@@ -147,28 +121,14 @@ namespace ChessAutoStepTest
         void Eat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx)
         {
             int nextPlayerIdx = GetNextPlayerIdx();
+
+            recordMgr.AppendRecord(
+                curtPlayPlayerIdx, nextPlayerIdx, 
+                eatBoardIdx, beEatBoardIdx, ChessRecordType.Eat);
+
             player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
             players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);
-
-            AppendRecord(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
-
         }
-
-        /// <summary>
-        /// 撤销吃子
-        /// </summary>
-        /// <param name="player">当前吃子玩家</param>
-        /// <param name="eatBoardIdx"></param>
-        /// <param name="beEatBoardIdx"></param>
-        void CancelEat(Player player, BoardIdx eatBoardIdx, BoardIdx beEatBoardIdx)
-        {
-            AppendRecord(eatBoardIdx, beEatBoardIdx, ChessCmdType.Eat);
-
-            int nextPlayerIdx = GetNextPlayerIdx();
-            player.EatOrMoveBoardPiece(eatBoardIdx, beEatBoardIdx);
-            players[nextPlayerIdx].DelBoardPieceRef(beEatBoardIdx.x, beEatBoardIdx.y);     
-        }
-
 
         /// <summary>
         /// 移动棋子
@@ -178,23 +138,13 @@ namespace ChessAutoStepTest
         /// <param name="dstBoardIdx"></param>
         void Move(Player player, BoardIdx moveBoardIdx, BoardIdx dstBoardIdx)
         {
-            AppendRecord(moveBoardIdx, dstBoardIdx, ChessCmdType.Move);
+            int nextPlayerIdx = GetNextPlayerIdx();
+
+           recordMgr.AppendRecord(curtPlayPlayerIdx, nextPlayerIdx,
+                moveBoardIdx, dstBoardIdx, ChessRecordType.Move);
 
             player.EatOrMoveBoardPiece(moveBoardIdx, dstBoardIdx);       
         }
-
-        /// <summary>
-        /// 添加到走棋记录
-        /// </summary>
-        /// <param name="orgBoardIdx"></param>
-        /// <param name="dstBoardIdx"></param>
-        /// <param name="type"></param>
-        void AppendRecord(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx, ChessCmdType type)
-        {
-            Record record = new Record(chessBoard, orgBoardIdx, dstBoardIdx, type);
-            recordList.Push(record);
-        }
-
 
         /// <summary>
         /// 玩家策略走棋
@@ -224,8 +174,6 @@ namespace ChessAutoStepTest
 
                 if (eatPos.Length != 0 || movePos.Length != 0)
                 {
-                    CacheGameData();
-
                     for (int i = 0; i < eatPos.Length; i++)
                     {
                         Eat(player, kingBoardIdx[0], eatPos[i]);
@@ -236,7 +184,7 @@ namespace ChessAutoStepTest
                         }
                         else
                         {
-                            RecoverGameData();
+                           recordMgr.CancelRecord();
                         }
                     }
 
@@ -250,7 +198,7 @@ namespace ChessAutoStepTest
                         }
                         else
                         {
-                            RecoverGameData();
+                            recordMgr.CancelRecord();
                         }
                     }
                 }
