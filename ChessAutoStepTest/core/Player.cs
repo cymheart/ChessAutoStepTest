@@ -14,7 +14,6 @@ namespace ChessAutoStepTest
     {
         LinkedList<int> chessBoardPiecePos = new LinkedList<int>();
         Chessboard chessBoard;
-        int m = 0;
 
         public Player(Chessboard board)
         {
@@ -24,12 +23,6 @@ namespace ChessAutoStepTest
         public void DelBoardPieceRef(int boardX, int boardY)
         {
             int key = GetPieceKeyForBoardIdx(boardX, boardY);
-
-            if (key == 4102)
-            {
-                m--;
-            }
-
             if (chessBoardPiecePos.Contains(key))
                 chessBoardPiecePos.Remove(key);
         }
@@ -37,17 +30,6 @@ namespace ChessAutoStepTest
         public void AddBoardPieceRef(int boardX, int boardY)
         {
             int key = GetPieceKeyForBoardIdx(boardX, boardY);
-            if(key == 4102)
-            {
-                m++;
-
-                if(m == 2)
-                {
-                    int b;
-                    b = 3;
-                }
-            }
-
             chessBoardPiecePos.AddLast(key);
         }
 
