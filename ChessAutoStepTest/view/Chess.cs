@@ -10,6 +10,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,14 +23,34 @@ namespace ChessAutoStepTest
         RecordManager recordMgr;
         BoardView boardView;
         public static Control ChessView;
+        bool isPause = false;
+        int recordIdx = 0;
 
         LinkedListNode<Record> recordNode;
         public Chess()
         {
             InitializeComponent();
             ChessView = board ;
-
             gameManager = new GameManager();
+
+            boardView = new BoardView();
+            boardView.PieceMovedStopEvent = PieceMovedStoped;
+            boardView.ResetSize(board.Width, board.Height);
+        }
+
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            StartGame();
+        }
+
+        void StartGame()
+        {
+            boardView.Destory();
+            recordIdx = 0;
+            isPause = false;
+            recordNode = null;
+
             gameManager.CreateGame();
             gameManager.Play();
 
@@ -37,20 +58,34 @@ namespace ChessAutoStepTest
             recordMgr = gameManager.recordMgr;
 
             boardView = new BoardView();
+            boardView.PlaceEndEvent = PlaceEnd;
             boardView.PieceMovedStopEvent = PieceMovedStoped;
-            boardView.CreateBoardView(chessboard);
+            boardView.CreateBoardPieces(chessboard);
             boardView.ResetSize(board.Width, board.Height);
-            
+            ChessView.Refresh();
+
             AddRecordToListBox();
 
-            Play();
+           
         }
 
         void Play()
         {
-            recordNode = recordMgr.recordList.First;
+            if(recordNode == null)
+            {
+                recordNode = recordMgr.recordList.First;
+            }
+
             Record record = recordNode.Value;
             boardView.Move(record.orgBoardIdx, record.dstBoardIdx);
+
+            listBoxRecord.SetSelected(recordIdx, true);
+            recordIdx++;
+        }
+
+        void PlaceEnd()
+        {
+            Play();
         }
 
         void PieceMovedStoped(PieceView pieceView)
@@ -59,8 +94,13 @@ namespace ChessAutoStepTest
             if (recordNode == null)
                 return;
 
+            if (isPause)
+                return;
+         
             Record record = recordNode.Value;
             boardView.Move(record.orgBoardIdx, record.dstBoardIdx);
+            listBoxRecord.SetSelected(recordIdx, true);
+            recordIdx++;
         }
 
 
@@ -118,6 +158,9 @@ namespace ChessAutoStepTest
            // g.SmoothingMode = SmoothingMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
+            if (boardView == null)
+                return;
+
             boardView.Draw(g);
         }
 
@@ -130,10 +173,30 @@ namespace ChessAutoStepTest
             board.Refresh();
         }
 
-        private void btnPlay_Click(object sender, EventArgs e)
+        private void btnPause_Click(object sender, EventArgs e)
         {
- 
-            boardView.Move(new BoardIdx(3, 1), new BoardIdx(2, 7));
+            if (isPause)
+            {
+                isPause = false;
+                Play();
+                btnPause.Text = "暂停游戏";
+            }
+            else
+            {
+                isPause = true;
+                btnPause.Text = "继续游戏";
+            }
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            gameManager.IsRandomPiecesPos = checkBox1.Checked;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            gameManager.IsRandomPiecesCount = checkBox2.Checked;
+        }
+
     }
 }

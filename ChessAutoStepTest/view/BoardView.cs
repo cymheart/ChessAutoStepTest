@@ -30,10 +30,19 @@ namespace ChessAutoStepTest
         Table bottomLanTable;
 
         public Action<PieceView> PieceMovedStopEvent = null;
-        public void CreateBoardView(Chessboard chessBoard)
+        public Action PlaceEndEvent = null;
+
+        Animation placeAnim;
+        int animMS = 0;
+
+        public BoardView()
+        {
+            boardPieceViews = new PieceView[8, 8];
+        }
+
+        public void CreateBoardPieces(Chessboard chessBoard)
         {
             this.chessBoard = chessBoard;
-            boardPieceViews = new PieceView[chessBoard.XCount, chessBoard.YCount];
 
             Piece piece;
             PieceView pieceView;
@@ -50,7 +59,50 @@ namespace ChessAutoStepTest
                     boardPieceViews[i, j] = pieceView;
                 }
             }
+
+
+
+            placeAnim = new Animation(Chess.ChessView, animMS, false);
+            placeAnim.DurationMS = 1000;
+            placeAnim.AnimationEvent += PlaceEvent;
+            placeAnim.Start();
+         
+
         }
+
+        private void PlaceEvent(Animation animation)
+        {
+            placeAnim.Stop();
+
+            if (PlaceEndEvent != null)
+                PlaceEndEvent();
+        }
+
+    
+        public void Destory()
+        {
+            if(placeAnim != null)
+                placeAnim.Stop();
+
+            int xCount = boardPieceViews.GetLength(0);
+            int yCount = boardPieceViews.GetLength(1);
+            PieceView pieceView;
+
+            List<PieceView> movedPieceView = new List<PieceView>();
+
+            for (int i = 0; i < xCount; i++)
+            {
+                for (int j = 0; j < yCount; j++)
+                {
+                    pieceView = boardPieceViews[i, j];
+                    if (pieceView == null)
+                        continue;
+
+                    pieceView.StopMove();
+                }
+            }
+        }
+
 
         public void PieceMovedStoped(PieceView pieceView)
         {
@@ -318,6 +370,9 @@ namespace ChessAutoStepTest
             int xCount = boardPieceViews.GetLength(0);
             int yCount = boardPieceViews.GetLength(1);
             PieceView pieceView;
+
+            List<PieceView> movedPieceView = new List<PieceView>();
+
             for (int i = 0; i < xCount; i++)
             {
                 for (int j = 0; j < yCount; j++)
@@ -326,8 +381,16 @@ namespace ChessAutoStepTest
                     if (pieceView == null)
                         continue;
 
-                    pieceView.Draw(g);
+                    if (pieceView.IsMoving)
+                        movedPieceView.Add(pieceView);
+                    else
+                        pieceView.Draw(g);
                 }
+            }
+
+            for(int i=0; i< movedPieceView.Count; i++)
+            {
+                movedPieceView[i].Draw(g);
             }
         }
 

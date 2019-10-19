@@ -33,10 +33,9 @@ namespace ChessAutoStepTest
         ///注意: 是否随机棋子初始位置,这个设置为true,
         ///可能导致开时时，王就在对方棋子旁边，而至使出现只有1轮就结束了
         /// </summary>
-        bool IsRandomPiecesPos = false;
+        public bool IsRandomPiecesPos = false;
 
-
-        bool IsRandomPiecesCount = false;
+        public bool IsRandomPiecesCount = false;
 
         int firstPlayPlayerIdx = 0;
         public ChessColor[] playerPieceColor = { ChessColor.White, ChessColor.Black};
@@ -69,6 +68,7 @@ namespace ChessAutoStepTest
                 new Player(chessBoard),
                 new Player(chessBoard)
            };
+
 
 
             curtPlayPlayerIdx = -1;
@@ -461,6 +461,10 @@ namespace ChessAutoStepTest
 
         public void CreateRandomIdxTable()
         {
+            allPiecesIdx.Clear();
+            pawn0Idx.Clear();
+            pawn1Idx.Clear();
+
 
             for (int i = 0; i < ChessBoardXCount; i++)
             {

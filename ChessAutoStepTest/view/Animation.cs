@@ -18,7 +18,7 @@ namespace Anim
 
         System.Windows.Forms.Timer refreshTimer = null;
         bool autoRest = false;
-        int durationMS = 20;
+        int durationMS = 16;
         public int animMS = 100;
         int frameIndex = 0;
         bool isDisposed = false;

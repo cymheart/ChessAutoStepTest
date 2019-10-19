@@ -17,7 +17,7 @@ namespace ChessAutoStepTest
         public Piece piece;
         public Image img;
         public RectangleF rect;
-        int animMS = 500;
+        public int speed = 700;
         Animation moveAnim;
         LinearAnimation linearPosX;
         LinearAnimation linearPosY;
@@ -32,9 +32,10 @@ namespace ChessAutoStepTest
         {
             this.boardView = boardView;
             img = Resource.Load(imgName);
-            moveAnim = new Animation(Chess.ChessView, animMS, true);
+            moveAnim = new Animation(Chess.ChessView, speed, true);
             moveAnim.AnimationEvent += MovedEvent;
         }
+
 
         public void SetBoardIdx(int x, int y)
         {
@@ -64,6 +65,13 @@ namespace ChessAutoStepTest
         {
             moveAnim.Stop();
         }
+
+        public void StopMove()
+        {
+            IsMoving = false;
+            moveAnim.Stop();
+        }
+
 
         public void ResumeMove()
         {
