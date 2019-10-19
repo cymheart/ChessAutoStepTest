@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +21,16 @@ namespace ChessAutoStepTest
         Chessboard chessboard;
         RecordManager recordMgr;
         BoardView boardView;
+        public static Control ChessView;
         public Chess()
         {
             InitializeComponent();
+            ChessView = chessView ;
+
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
+            SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
+
 
             gameManager = new GameManager();
             gameManager.CreateGame();
@@ -31,11 +40,17 @@ namespace ChessAutoStepTest
             recordMgr = gameManager.recordMgr;
 
             boardView = new BoardView();
-            boardView.CreateBoardView( chessboard);
+            boardView.CreateBoardView(chessboard);
             boardView.ResetSize(chessView.Width, chessView.Height);
+
+            BoardIdx orgBoardIdx = new BoardIdx(3, 1);
+            BoardIdx dstBoardIdx = new BoardIdx(2, 7);
+
+            boardView.Eat(orgBoardIdx, dstBoardIdx);
 
             AddRecordToListBox();
         }
+
 
         void AddRecordToListBox()
         {
@@ -85,6 +100,9 @@ namespace ChessAutoStepTest
 
         private void chessView_SizeChanged(object sender, EventArgs e)
         {
+            if (boardView == null)
+                return;
+
             boardView.ResetSize(chessView.Width, chessView.Height);
             chessView.Refresh();
         }
@@ -93,6 +111,8 @@ namespace ChessAutoStepTest
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            //g.SmoothingMode = SmoothingMode.HighQuality;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
             boardView.Draw(g);
         }

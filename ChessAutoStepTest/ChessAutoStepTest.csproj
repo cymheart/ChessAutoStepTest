@@ -46,6 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="view\BoardControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="view\BoardControl.Designer.cs">
+      <DependentUpon>BoardControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="view\Draw\DrawUtils.cs" />
+    <Compile Include="view\Draw\LimitBoxDrawUtils.cs" />
     <Compile Include="view\LinearAnimation.cs" />
     <Compile Include="view\Animation.cs" />
     <Compile Include="view\Chess.cs">
