@@ -15,6 +15,14 @@ namespace ChessAutoStepTest.view
         public BoardControl()
         {
             InitializeComponent();
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
+            SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
         }
+
+        //protected override void OnPaintBackground(PaintEventArgs e)
+        //{
+
+        //}
     }
 }

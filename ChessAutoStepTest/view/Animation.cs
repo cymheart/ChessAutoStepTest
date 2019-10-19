@@ -13,7 +13,10 @@ namespace Anim
     public class Animation:IDisposable
     {
         Control control;
-        private System.Timers.Timer refreshTimer = null;
+      
+        //  private System.Timers.Timer refreshTimer = null;
+
+        System.Windows.Forms.Timer refreshTimer = null;
         bool autoRest = false;
         int durationMS = 20;
         public int animMS = 100;
@@ -86,21 +89,32 @@ namespace Anim
            if (isDisposed)
                 return;
 
-            refreshTimer = new System.Timers.Timer(period);   //实例化Timer类，设置间隔时间为period毫秒   
-            refreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(theout); //到达时间的时候执行事件   
-            refreshTimer.AutoReset = autoRest;   //设置是执行一次（false）还是一直执行(true)   
-            refreshTimer.Enabled = true;     //是否执行System.Timers.Timer.Elapsed事件  
+            refreshTimer = new System.Windows.Forms.Timer();
+            //设置定时器属性
+            refreshTimer.Tick += new EventHandler(theout);
+            refreshTimer.Interval = period;
+            refreshTimer.Enabled = true;
+            //开启定时器
+            refreshTimer.Start();
+
+            //refreshTimer = new System.Timers.Timer(period);   //实例化Timer类，设置间隔时间为period毫秒   
+            //refreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(theout); //到达时间的时候执行事件   
+            //refreshTimer.AutoReset = autoRest;   //设置是执行一次（false）还是一直执行(true)   
+            //refreshTimer.Enabled = true;     //是否执行System.Timers.Timer.Elapsed事件  
+            //refreshTimer.SynchronizingObject = control;
         }
 
         void StopTimer()
         {
             if (refreshTimer != null)
             {
+          
                 refreshTimer.Stop();
                 refreshTimer.Dispose();
                 refreshTimer = null;
             }
         }
+
 
         public void theout(object source, EventArgs e)
         {
@@ -108,7 +122,9 @@ namespace Anim
                 return;
 
             frameIndex++;
-            control.Invoke(updateDet, this);
+
+            AnimationEvent?.Invoke(this);
+           // control.Invoke(updateDet, this);
         }
 
         void Update(object obj)

@@ -30,14 +30,14 @@
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.chessView = new System.Windows.Forms.Panel();
             this.setting = new System.Windows.Forms.Panel();
             this.cmdRecord = new System.Windows.Forms.Panel();
             this.listBoxRecord = new System.Windows.Forms.ListBox();
-            this.boardControl1 = new ChessAutoStepTest.view.BoardControl();
+            this.board = new ChessAutoStepTest.view.BoardControl();
+            this.btnPlay = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.chessView.SuspendLayout();
+            this.setting.SuspendLayout();
             this.cmdRecord.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,8 +62,8 @@
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.44836F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.55164F));
-            this.tableLayoutPanel2.Controls.Add(this.chessView, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.setting, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.board, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -73,20 +73,10 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(773, 391);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // chessView
-            // 
-            this.chessView.Controls.Add(this.boardControl1);
-            this.chessView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chessView.Location = new System.Drawing.Point(0, 0);
-            this.chessView.Margin = new System.Windows.Forms.Padding(0);
-            this.chessView.Name = "chessView";
-            this.chessView.Size = new System.Drawing.Size(590, 391);
-            this.chessView.TabIndex = 0;
-            this.chessView.SizeChanged += new System.EventHandler(this.chessView_SizeChanged);
-            this.chessView.Paint += new System.Windows.Forms.PaintEventHandler(this.chessView_Paint);
-            // 
             // setting
             // 
+            this.setting.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.setting.Controls.Add(this.btnPlay);
             this.setting.Dock = System.Windows.Forms.DockStyle.Fill;
             this.setting.Location = new System.Drawing.Point(590, 0);
             this.setting.Margin = new System.Windows.Forms.Padding(0);
@@ -118,12 +108,26 @@
             this.listBoxRecord.Size = new System.Drawing.Size(779, 185);
             this.listBoxRecord.TabIndex = 0;
             // 
-            // boardControl1
+            // board
             // 
-            this.boardControl1.Location = new System.Drawing.Point(372, 125);
-            this.boardControl1.Name = "boardControl1";
-            this.boardControl1.Size = new System.Drawing.Size(150, 150);
-            this.boardControl1.TabIndex = 0;
+            this.board.BackColor = System.Drawing.SystemColors.Control;
+            this.board.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.board.Location = new System.Drawing.Point(3, 3);
+            this.board.Name = "board";
+            this.board.Size = new System.Drawing.Size(584, 385);
+            this.board.TabIndex = 2;
+            this.board.SizeChanged += new System.EventHandler(this.board_SizeChanged);
+            this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
+            // 
+            // btnPlay
+            // 
+            this.btnPlay.Location = new System.Drawing.Point(39, 190);
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.Size = new System.Drawing.Size(75, 23);
+            this.btnPlay.TabIndex = 0;
+            this.btnPlay.Text = "开始游戏";
+            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // Chess
             // 
@@ -135,7 +139,7 @@
             this.Text = "ChessAutoStep";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
-            this.chessView.ResumeLayout(false);
+            this.setting.ResumeLayout(false);
             this.cmdRecord.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -145,11 +149,11 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Panel chessView;
         private System.Windows.Forms.Panel setting;
         private System.Windows.Forms.Panel cmdRecord;
         private System.Windows.Forms.ListBox listBoxRecord;
-        private view.BoardControl boardControl1;
+        private view.BoardControl board;
+        private System.Windows.Forms.Button btnPlay;
     }
 }
 

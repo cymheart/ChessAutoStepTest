@@ -22,15 +22,12 @@ namespace ChessAutoStepTest
         RecordManager recordMgr;
         BoardView boardView;
         public static Control ChessView;
+
+        LinkedListNode<Record> recordNode;
         public Chess()
         {
             InitializeComponent();
-            ChessView = chessView ;
-
-            SetStyle(ControlStyles.UserPaint, true);
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
-            SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
-
+            ChessView = board ;
 
             gameManager = new GameManager();
             gameManager.CreateGame();
@@ -40,15 +37,30 @@ namespace ChessAutoStepTest
             recordMgr = gameManager.recordMgr;
 
             boardView = new BoardView();
+            boardView.PieceMovedStopEvent = PieceMovedStoped;
             boardView.CreateBoardView(chessboard);
-            boardView.ResetSize(chessView.Width, chessView.Height);
-
-            BoardIdx orgBoardIdx = new BoardIdx(3, 1);
-            BoardIdx dstBoardIdx = new BoardIdx(2, 7);
-
-            boardView.Eat(orgBoardIdx, dstBoardIdx);
-
+            boardView.ResetSize(board.Width, board.Height);
+            
             AddRecordToListBox();
+
+            Play();
+        }
+
+        void Play()
+        {
+            recordNode = recordMgr.recordList.First;
+            Record record = recordNode.Value;
+            boardView.Move(record.orgBoardIdx, record.dstBoardIdx);
+        }
+
+        void PieceMovedStoped(PieceView pieceView)
+        {
+            recordNode = recordNode.Next;
+            if (recordNode == null)
+                return;
+
+            Record record = recordNode.Value;
+            boardView.Move(record.orgBoardIdx, record.dstBoardIdx);
         }
 
 
@@ -98,25 +110,30 @@ namespace ChessAutoStepTest
             listBoxRecord.Items.Add(resultMsg);
         }
 
-        private void chessView_SizeChanged(object sender, EventArgs e)
-        {
-            if (boardView == null)
-                return;
 
-            boardView.ResetSize(chessView.Width, chessView.Height);
-            chessView.Refresh();
-        }
-
-        private void chessView_Paint(object sender, PaintEventArgs e)
+        private void board_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            //g.SmoothingMode = SmoothingMode.HighQuality;
+           // g.SmoothingMode = SmoothingMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
             boardView.Draw(g);
         }
 
-       
+        private void board_SizeChanged(object sender, EventArgs e)
+        {
+            if (boardView == null)
+                return;
+
+            boardView.ResetSize(board.Width, board.Height);
+            board.Refresh();
+        }
+
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+ 
+            boardView.Move(new BoardIdx(3, 1), new BoardIdx(2, 7));
+        }
     }
 }

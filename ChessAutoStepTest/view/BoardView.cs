@@ -28,6 +28,8 @@ namespace ChessAutoStepTest
         Table rightLanTable;
         Table topLanTable;
         Table bottomLanTable;
+
+        public Action<PieceView> PieceMovedStopEvent = null;
         public void CreateBoardView(Chessboard chessBoard)
         {
             this.chessBoard = chessBoard;
@@ -43,21 +45,45 @@ namespace ChessAutoStepTest
                     if (piece == null)
                         continue;
                     pieceView = CreatePieceView(piece.Type, piece.Color);
+                    pieceView.MovedStopEvent = PieceMovedStoped;
+
                     boardPieceViews[i, j] = pieceView;
                 }
             }
         }
 
+        public void PieceMovedStoped(PieceView pieceView)
+        {
+            if (PieceMovedStopEvent != null)
+                PieceMovedStopEvent(pieceView);
+        }
+
         public void ResetSize(int width, int height)
         {
+            RectangleF oldTableRect = new RectangleF();
+            RectangleF newTableRect = new RectangleF();
+            float scale = 1f;
+
+            if (boardTable != null)
+            {
+                oldTableRect = boardTable.GetTableRect();
+                oldTableRect = boardTable.TransToGlobalRect(oldTableRect);
+            }
+
             CreateTables(width, height);
 
+            if (boardTable != null)
+            {
+                newTableRect = boardTable.GetTableRect();
+                newTableRect = boardTable.TransToGlobalRect(newTableRect);
 
-            //
+                scale = newTableRect.Width / oldTableRect.Width;
+            }
+
+
             int xCount = boardPieceViews.GetLength(0);
             int yCount = boardPieceViews.GetLength(1);
             PieceView pieceView;
-            RectangleF pieceRect;
             for (int i = 0; i < xCount; i++)
             {
                 for (int j = 0; j < yCount; j++)
@@ -69,16 +95,30 @@ namespace ChessAutoStepTest
                     if (pieceView.IsMoving == false)
                     {
                         pieceView.rect = GetTableCellRectByBoardIdx(i, j);
+                        pieceView.SetBoardIdx(i, j);
                     }
                     else
                     {
+                        pieceView.SuspendMove();
+                        float x = (pieceView.rect.X - oldTableRect.X) * scale;
+                        float y = (pieceView.rect.Y - oldTableRect.Y) * scale;
+
+                        x += newTableRect.X;
+                        y += newTableRect.Y;
+
+                        pieceView.rect.X = x;
+                        pieceView.rect.Y = y;
+
+                        RectangleF newRect = GetTableCellRectByBoardIdx(i, j);
+                        pieceView.rect.Width = newRect.Width;
+                        pieceView.rect.Height = newRect.Height;
+                        pieceView.ResumeMove();
 
                     }
-
                 }
             }
-        }
 
+        }
 
 
         public void CreateTables(int width, int height)
@@ -153,26 +193,9 @@ namespace ChessAutoStepTest
             return boardTable.GetCellGlobalRect(row, col);
         }
 
-        public void Draw(Graphics graphics)
+        public void Draw(Graphics g)
         {
-           // BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
-            RectangleF tableRectF = table.TransToGlobalRect(table.GetTableRect());
-            Rectangle tableRect = new Rectangle(0, 0, size.Width, size.Height);
-            Bitmap bmp = new Bitmap(tableRect.Width, tableRect.Height);
-            Graphics g = Graphics.FromImage(bmp);
-
-            //BufferedGraphics bufg = currentContext.Allocate(graphics, tableRect);
-            //Graphics g = bufg.Graphics;
-          
-
-            //Graphics g = e.Graphics;
-            //// Graphics g = this.CreateGraphics();
-            //Bitmap bmp = new Bitmap(ClientSize.Width, ClientSize.Height - splitContainer1
-            //Graphics bufg = Graphics.FromImage(bmp);
-
-
             DrawBG(g);
-
 
             //左标号
             DrawLeftSideText(g);
@@ -191,10 +214,6 @@ namespace ChessAutoStepTest
 
             //棋子
             DrawPieces(g);
-
-            graphics.DrawImage(bmp, tableRect.X, tableRect.Y);
-
-            g.Dispose();
         }
 
         void DrawBG(Graphics g)
@@ -335,21 +354,19 @@ namespace ChessAutoStepTest
             return new PieceView(this, name);
         }
 
-        public void Eat(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx)
+        public void SetPiece(PieceView piece, int x, int y)
+        {
+            boardPieceViews[x, y] = piece;
+        }
+
+        public void Move(BoardIdx orgBoardIdx, BoardIdx dstBoardIdx)
         {
             PieceView orgPieceView = boardPieceViews[orgBoardIdx.x, orgBoardIdx.y];
+            if (orgPieceView == null)
+                return;
+
             orgPieceView.StartMove(dstBoardIdx);
         }
 
-
-        //public void StartAnim(BoardIdx dstBoardIdx)
-        //{
-        //    anim.Stop();
-
-        // //   linearR = new LinearAnimation(color.R, stopColor.R, scAnim);
-        // //   linearG = new LinearAnimation(color.G, stopColor.G, scAnim);
-
-        //    anim.Start();
-        //}
     }
 }

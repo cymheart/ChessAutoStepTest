@@ -1,0 +1,10 @@
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\bin\Release\ChessAutoStepTest.exe.config
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\bin\Release\ChessAutoStepTest.exe
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\bin\Release\ChessAutoStepTest.pdb
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.view.BoardControl.resources
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.Chess.resources
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.Properties.Resources.resources
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.csproj.GenerateResource.cache
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.csproj.CoreCompileInputs.cache
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.exe
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.pdb

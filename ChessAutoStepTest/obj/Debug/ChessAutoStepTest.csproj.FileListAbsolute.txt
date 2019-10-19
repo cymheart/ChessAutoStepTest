@@ -18,3 +18,4 @@ D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoSte
 D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.exe
 D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.pdb
 D:\Documents\github\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.Chess.resources
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Debug\ChessAutoStepTest.view.BoardControl.resources

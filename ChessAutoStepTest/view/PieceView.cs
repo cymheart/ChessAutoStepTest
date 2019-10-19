@@ -17,12 +17,13 @@ namespace ChessAutoStepTest
         public Piece piece;
         public Image img;
         public RectangleF rect;
-        int animMS = 5000;
+        int animMS = 500;
         Animation moveAnim;
         LinearAnimation linearPosX;
         LinearAnimation linearPosY;
 
-        BoardIdx dstBoardIdx;
+        BoardIdx boardIdx;
+        public BoardIdx dstBoardIdx;
         public bool IsMoving = false;
 
         public Action<PieceView> MovedStopEvent = null;
@@ -35,9 +36,19 @@ namespace ChessAutoStepTest
             moveAnim.AnimationEvent += MovedEvent;
         }
 
+        public void SetBoardIdx(int x, int y)
+        {
+            SetBoardIdx(new BoardIdx(x, y));
+        }
+        public void SetBoardIdx(BoardIdx boardIdx)
+        {
+            this.boardIdx = boardIdx;
+        }
+
         public void StartMove(BoardIdx dstBoardIdx)
         {
             this.dstBoardIdx = dstBoardIdx;
+
             RectangleF dstRect  = boardView.GetTableCellRectByBoardIdx(dstBoardIdx);
             rect.Width = dstRect.Width;
             rect.Height = dstRect.Height;
@@ -54,21 +65,39 @@ namespace ChessAutoStepTest
             moveAnim.Stop();
         }
 
+        public void ResumeMove()
+        {
+            StartMove(dstBoardIdx);
+        }
+
         private void MovedEvent(Animation animation)
         {
             rect.X = linearPosX.GetCurtValue();
             rect.Y = linearPosY.GetCurtValue();
 
-            Chess.ChessView.Refresh();
 
             if (linearPosX.IsStop && linearPosY.IsStop)
             {
                 animation.Stop();
                 IsMoving = false;
 
+                boardView.SetPiece(null, boardIdx.x, boardIdx.y);
+                boardView.SetPiece(this, dstBoardIdx.x, dstBoardIdx.y);
+                boardIdx = dstBoardIdx;
+
+                Chess.ChessView.Refresh();
+
                 if (MovedStopEvent != null)
                     MovedStopEvent(this);
+
             }
+            else
+            {
+                Chess.ChessView.Refresh();
+            }
+
+        
+
         }
 
 
