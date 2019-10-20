@@ -199,7 +199,9 @@ namespace ChessAutoStepTest
             boardView.PieceMovedStopEvent = PieceMovedStoped;
             boardView.CreateBoardPieces(recordChessBoard);
             boardView.ResetSize(board.Width, board.Height);
+
             recordNode = recordNode.Next;
+            recordIdx++;
             ChessView.Refresh();      
         }
 
