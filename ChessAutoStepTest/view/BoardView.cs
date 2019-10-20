@@ -40,7 +40,7 @@ namespace ChessAutoStepTest
             boardPieceViews = new PieceView[8, 8];
         }
 
-        public void CreateBoardPieces(Chessboard chessBoard)
+        public void CreateBoardPieces(Chessboard chessBoard, int placePieceTimeMS = 1000)
         {
             this.chessBoard = chessBoard;
 
@@ -60,14 +60,10 @@ namespace ChessAutoStepTest
                 }
             }
 
-
-
             placeAnim = new Animation(Chess.ChessView, animMS, false);
-            placeAnim.DurationMS = 1000;
+            placeAnim.DurationMS = placePieceTimeMS;
             placeAnim.AnimationEvent += PlaceEvent;
             placeAnim.Start();
-         
-
         }
 
         private void PlaceEvent(Animation animation)

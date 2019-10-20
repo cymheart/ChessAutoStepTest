@@ -60,7 +60,7 @@ namespace ChessAutoStepTest
             boardView = new BoardView();
             boardView.PlaceEndEvent = PlaceEnd;
             boardView.PieceMovedStopEvent = PieceMovedStoped;
-            boardView.CreateBoardPieces(chessboard);
+            boardView.CreateBoardPieces(chessboard, 1000);
             boardView.ResetSize(board.Width, board.Height);
             ChessView.Refresh();
 
@@ -106,6 +106,8 @@ namespace ChessAutoStepTest
 
         void AddRecordToListBox()
         {
+            Chessboard tmpChessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(chessboard);
+
             listBoxRecord.Items.Clear();
             int i = 0;
             Record record;
@@ -114,9 +116,9 @@ namespace ChessAutoStepTest
             {
                 i++;
                 record = node.Value;
-                Piece orgPiece = chessboard.GetPiece(record.orgBoardIdx);
-                Piece dstPiece = chessboard.GetPiece(record.dstBoardIdx);
-                chessboard.MovePiece(record.orgBoardIdx, record.dstBoardIdx);
+                Piece orgPiece = tmpChessBoard.GetPiece(record.orgBoardIdx);
+                Piece dstPiece = tmpChessBoard.GetPiece(record.dstBoardIdx);
+                tmpChessBoard.MovePiece(record.orgBoardIdx, record.dstBoardIdx);
 
                 string orgIdxMsg = "(" + record.orgBoardIdx.x + "," + record.orgBoardIdx.y + ")";
                 string dstIdxMsg = "(" + record.dstBoardIdx.x + "," + record.dstBoardIdx.y + ")";
@@ -148,6 +150,57 @@ namespace ChessAutoStepTest
             }
 
             listBoxRecord.Items.Add(resultMsg);
+        }
+
+        void GotoRecordGamePos(int recordIdx)
+        {
+            Chessboard recordChessBoard = CreateRecordChessboard(recordIdx);
+            ContinueGame(recordChessBoard);
+        }
+
+        Chessboard CreateRecordChessboard(int recordIdx)
+        {
+            Chessboard recordChessBoard = Tools.Instance.DeepCopyByBinary<Chessboard>(chessboard);
+
+            int tempRecordIdx = recordIdx;
+
+            if(recordIdx >= recordMgr.recordList.Count)
+            {
+                tempRecordIdx = recordMgr.recordList.Count - 1;
+            }
+
+            int i = -1;
+            Record record;
+            LinkedListNode<Record> node = recordMgr.recordList.First;
+            for (; node != null; node = node.Next)
+            {
+                i++;
+                record = node.Value;
+                Piece orgPiece = recordChessBoard.GetPiece(record.orgBoardIdx);
+                Piece dstPiece = recordChessBoard.GetPiece(record.dstBoardIdx);
+                recordChessBoard.MovePiece(record.orgBoardIdx, record.dstBoardIdx);
+                if (i == tempRecordIdx)
+                {
+                    recordNode = node;
+                    break;
+                }
+            }
+
+            return recordChessBoard;
+        }
+
+
+        void ContinueGame(Chessboard recordChessBoard)
+        {
+            boardView.Destory();
+            isPause = false;
+            boardView = new BoardView();
+            boardView.PlaceEndEvent = PlaceEnd;
+            boardView.PieceMovedStopEvent = PieceMovedStoped;
+            boardView.CreateBoardPieces(recordChessBoard);
+            boardView.ResetSize(board.Width, board.Height);
+            recordNode = recordNode.Next;
+            ChessView.Refresh();      
         }
 
 
@@ -198,5 +251,11 @@ namespace ChessAutoStepTest
             gameManager.IsRandomPiecesCount = checkBox2.Checked;
         }
 
+        private void listBoxRecord_MouseClick(object sender, MouseEventArgs e)
+        {
+            recordIdx = listBoxRecord.SelectedIndex;
+            isPause = true;
+            GotoRecordGamePos(recordIdx);
+        }
     }
 }

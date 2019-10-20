@@ -30,13 +30,13 @@
         {
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.setting = new System.Windows.Forms.Panel();
-            this.listBoxRecord = new System.Windows.Forms.ListBox();
-            this.btnPlay = new System.Windows.Forms.Button();
-            this.board = new ChessAutoStepTest.view.BoardControl();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.btnPause = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.btnPause = new System.Windows.Forms.Button();
+            this.btnPlay = new System.Windows.Forms.Button();
+            this.listBoxRecord = new System.Windows.Forms.ListBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.board = new ChessAutoStepTest.view.BoardControl();
             this.tableLayoutPanel2.SuspendLayout();
             this.setting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -74,6 +74,50 @@
             this.setting.Size = new System.Drawing.Size(220, 289);
             this.setting.TabIndex = 1;
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(21, 56);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(96, 16);
+            this.checkBox2.TabIndex = 3;
+            this.checkBox2.Text = "随机棋子个数";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(21, 24);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(120, 16);
+            this.checkBox1.TabIndex = 2;
+            this.checkBox1.Text = "随机开局棋子位置";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // btnPause
+            // 
+            this.btnPause.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnPause.Location = new System.Drawing.Point(134, 242);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(75, 23);
+            this.btnPause.TabIndex = 1;
+            this.btnPause.Text = "暂停游戏";
+            this.btnPause.UseVisualStyleBackColor = true;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            // 
+            // btnPlay
+            // 
+            this.btnPlay.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btnPlay.Location = new System.Drawing.Point(21, 242);
+            this.btnPlay.Name = "btnPlay";
+            this.btnPlay.Size = new System.Drawing.Size(75, 23);
+            this.btnPlay.TabIndex = 0;
+            this.btnPlay.Text = "新的游戏";
+            this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
+            // 
             // listBoxRecord
             // 
             this.listBoxRecord.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -87,28 +131,7 @@
             this.listBoxRecord.Name = "listBoxRecord";
             this.listBoxRecord.Size = new System.Drawing.Size(777, 285);
             this.listBoxRecord.TabIndex = 0;
-            // 
-            // btnPlay
-            // 
-            this.btnPlay.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnPlay.Location = new System.Drawing.Point(21, 242);
-            this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(75, 23);
-            this.btnPlay.TabIndex = 0;
-            this.btnPlay.Text = "新的游戏";
-            this.btnPlay.UseVisualStyleBackColor = true;
-            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
-            // 
-            // board
-            // 
-            this.board.BackColor = System.Drawing.SystemColors.Control;
-            this.board.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.board.Location = new System.Drawing.Point(3, 3);
-            this.board.Name = "board";
-            this.board.Size = new System.Drawing.Size(551, 283);
-            this.board.TabIndex = 2;
-            this.board.SizeChanged += new System.EventHandler(this.board_SizeChanged);
-            this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
+            this.listBoxRecord.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listBoxRecord_MouseClick);
             // 
             // splitContainer1
             // 
@@ -129,38 +152,16 @@
             this.splitContainer1.SplitterDistance = 291;
             this.splitContainer1.TabIndex = 1;
             // 
-            // btnPause
+            // board
             // 
-            this.btnPause.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnPause.Location = new System.Drawing.Point(134, 242);
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(75, 23);
-            this.btnPause.TabIndex = 1;
-            this.btnPause.Text = "暂停游戏";
-            this.btnPause.UseVisualStyleBackColor = true;
-            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(21, 24);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(120, 16);
-            this.checkBox1.TabIndex = 2;
-            this.checkBox1.Text = "随机开局棋子位置";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(21, 56);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(96, 16);
-            this.checkBox2.TabIndex = 3;
-            this.checkBox2.Text = "随机棋子个数";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.board.BackColor = System.Drawing.SystemColors.Control;
+            this.board.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.board.Location = new System.Drawing.Point(3, 3);
+            this.board.Name = "board";
+            this.board.Size = new System.Drawing.Size(551, 283);
+            this.board.TabIndex = 2;
+            this.board.SizeChanged += new System.EventHandler(this.board_SizeChanged);
+            this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
             // 
             // Chess
             // 

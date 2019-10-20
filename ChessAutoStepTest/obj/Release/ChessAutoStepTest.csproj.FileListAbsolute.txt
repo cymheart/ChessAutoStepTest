@@ -8,3 +8,4 @@ D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoS
 D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.csproj.CoreCompileInputs.cache
 D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.exe
 D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.pdb
+D:\MyDocuments\GitHub\ChessAutoStepTest\ChessAutoStepTest\obj\Release\ChessAutoStepTest.csprojAssemblyReference.cache
